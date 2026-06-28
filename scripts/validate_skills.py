@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIR = ROOT / ".agents" / "skills"
 PI_COMMANDS_DIR = ROOT / "prompts"
 OPENCODE_COMMANDS_DIR = ROOT / ".opencode" / "commands"
+OPENAI_YAML = ROOT / "agents" / "openai.yaml"
 
 REQUIRED_FIELDS = {"name", "description", "license", "user-invocable", "tags", "metadata"}
 METADATA_FIELDS = {"version", "updated", "author", "repository"}
@@ -128,12 +129,34 @@ def validate_command_parity() -> list[str]:
     return errors
 
 
+def validate_openai_yaml() -> list[str]:
+    errors: list[str] = []
+    if not OPENAI_YAML.exists():
+        return ["agents/openai.yaml missing"]
+    text = OPENAI_YAML.read_text()
+    data, _ = parse_frontmatter(text)
+    if data is None or "__parse_error__" in (data or {}):
+        return ["agents/openai.yaml frontmatter parse error"]
+
+    listed_skills = set(data.get("skills", []) or [])
+    actual_skills = {p.name for p in SKILLS_DIR.iterdir() if p.is_dir()}
+    if listed_skills != actual_skills:
+        errors.append(f"agents/openai.yaml skills mismatch: listed={sorted(listed_skills)} actual={sorted(actual_skills)}")
+
+    listed_commands = {c.removeprefix('/') for c in (data.get("commands", []) or [])}
+    actual_commands = {p.stem for p in PI_COMMANDS_DIR.glob("*.md")}
+    if listed_commands != actual_commands:
+        errors.append(f"agents/openai.yaml commands mismatch: listed={sorted(listed_commands)} actual={sorted(actual_commands)}")
+    return errors
+
+
 def main() -> int:
     all_errors: list[str] = []
     for skill_dir in sorted(SKILLS_DIR.iterdir()):
         if skill_dir.is_dir():
             all_errors.extend(validate_skill(skill_dir))
     all_errors.extend(validate_command_parity())
+    all_errors.extend(validate_openai_yaml())
 
     if all_errors:
         print("Validation failed:", file=sys.stderr)

@@ -7,6 +7,8 @@ repository: https://github.com/madearga/s3s
 license: MIT
 skills:
   - s3s
+  - seedance-shotlist-analyze
+  - seedance-shotlist-variations
   - seedance-make-character
   - seedance-make-location
   - seedance-make-prop
@@ -14,6 +16,8 @@ skills:
   - seedance-shotlist-director
 commands:
   - /s3s
+  - /s3s-analyze
+  - /s3s-variations
   - /s3s-references
   - /s3s-interview
   - /s3s-shotlist
@@ -32,6 +36,8 @@ Agent-native workflow package for building Seedance 2.0 videos.
 ## Usage
 
 - `/s3s` — start the full workflow (assets → interview → shotlist)
+- `/s3s-analyze` — reverse-engineer a reference clip into a brief
+- `/s3s-variations` — generate 5–10 shot/composition options for one moment
 - `/s3s-references` — build reference sheets only
 - `/s3s-interview` — creative intake and brief
 - `/s3s-shotlist` — generate the HTML shotlist from an existing brief

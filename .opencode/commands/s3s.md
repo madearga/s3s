@@ -1,5 +1,5 @@
 ---
-description: Seedance 2.0 shotlist workflow — smart router. Asset request → build references. With a script/treatment → builds the HTML shotlist. With a vague idea → runs the creative interview first.
+description: Seedance 2.0 shotlist workflow — smart router. Analyze video → reverse-engineer brief. One moment → variations. Asset request → build references. Script/treatment → HTML shotlist. Vague idea → creative interview.
 argument-hint: "[script text, idea, or paste your scene]"
 ---
 
@@ -9,7 +9,10 @@ You are entering the s3s two-skill workflow. Route based on what the user gave y
 
 ## Routing logic
 
-Check for asset requests FIRST, then script vs idea:
+Check for analysis / variations first, then asset requests, then script vs idea:
+
+- **Video analysis / reverse-engineering** — if `$ARGUMENTS` asks to study an existing clip, ad, reel, or video reference: "analyze this video", "reverse engineer this ad", "extract the prompt from this clip" → load **`seedance-shotlist-analyze`**.
+- **Variations for one moment** — if `$ARGUMENTS` asks for multiple ways to shoot one beat: "give me 10 options", "camera variations", "different ways to frame this" → load **`seedance-shotlist-variations`**.
 
 - **Asset / reference request** — if `$ARGUMENTS` mentions locking, building, or generating an asset without yet describing a scene to shoot: "lock the hero", "build the character sheet", "product sheet for...", "location reference", "prop turnaround", "make the assets first" → load **`seedance-make-character`** / **`seedance-make-location`** / **`seedance-make-prop`** as appropriate. Skip the interview and director until the assets exist.
 - **Finished script / scene breakdown / treatment** — any narrative content with concrete scenes, actions, or characters → load **`seedance-shotlist-director`** and build the HTML shotlist directly. Skip the interview.

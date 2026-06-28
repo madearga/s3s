@@ -1,13 +1,15 @@
 # s3s
 
-Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview** + **HTML shotlist director** with `@tag` image reference binding. Dual-compatible: runs in **pi** and **opencode**. Patterns adapted from the [the target platform cinematic ad workflow](https://the target platform.ai/blog/cinematic_headphones).
+Seedance 2.0 shotlist workflow — **video analysis** + **shot variations** + **reference sheets** + **creative interview** + **HTML shotlist director** with `@tag` image reference binding. Dual-compatible: runs in **pi** and **opencode**.
 
-## What's inside — 5 skills, 4 slash commands
+## What's inside — 8 skills, 6 slash commands
 
 ### Skills (`.agents/skills/`)
 
 | Skill | Job |
 |---|---|
+| **seedance-shotlist-analyze** | Reverse-engineer a reference clip into a practical recreation brief: style, camera, motion, continuity locks, recommended `@tag` assets, and a shotlist-ready hand-off. |
+| **seedance-shotlist-variations** | Generate 5–10 shot/composition alternatives for one scene or beat while keeping the same `@tag` assets, style, and continuity. |
 | **seedance-make-character** | Generate locked character-sheet prompts (split-frame face + full-body, grey bg, one face) + face-dedup edit + outfit/state variants. Base sheet → Soul Cinema / Nano Banana; edits → GPT Image 2. |
 | **seedance-make-location** | Generate locked location prompts (short + full establishing shot, 3/4 angle mandatory). → Cinematic Locations / Nano Banana. |
 | **seedance-make-prop** | Generate locked product/prop prompts (from-source-photo sheet / original unbranded turnaround / simple single-view). → GPT Image 2. |
@@ -19,6 +21,8 @@ Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview**
 | Command | Routes to |
 |---|---|
 | `/s3s` | Smart router — asset request → make-* skills; script/treatment → director; vague idea → interview |
+| `/s3s-analyze` | Reverse-engineer a reference clip into a shotlist-ready brief |
+| `/s3s-variations` | Generate 5–10 camera/composition options for one moment |
 | `/s3s-references` | Asset router → dispatches to make-character / make-location / make-prop based on input |
 | `/s3s-interview` | Force interview path (newbie intake) |
 | `/s3s-shotlist` | Force director path (build HTML from existing script) |
@@ -26,6 +30,10 @@ Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview**
 ## The full workflow
 
 ```
+/s3s-analyze     →  reverse-engineer a reference clip into a practical brief
+        │
+        ├─ optional: /s3s-variations for 5–10 ways to shoot one moment
+        ↓
 /s3s-references  →  lock every asset (character / product / location / prop) into @tag sheets
         │           (make-character / make-location / make-prop, each in its best image model)
         ↓  (@tag element list + verbatim reference prompt text)
@@ -43,9 +51,10 @@ Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview**
 
 ## Three entry paths
 
-1. **Vague idea, no script, no assets** → `/s3s-references` first (lock assets), then `/s3s-interview`, then `/s3s-shotlist`.
-2. **Script/treatment ready, no assets** → `/s3s-references` (if the film recurs characters/product), then `/s3s-shotlist`.
-3. **Already have real photos** of your product/person/place → skip references, attach the photos with `@tag` names, go straight to `/s3s-interview` or `/s3s-shotlist`.
+1. **Reference clip first** → `/s3s-analyze`, optionally `/s3s-variations`, then `/s3s-references` / `/s3s-shotlist`.
+2. **Vague idea, no script, no assets** → `/s3s-references` first (lock assets), then `/s3s-interview`, then `/s3s-shotlist`.
+3. **Script/treatment ready, no assets** → `/s3s-references` (if the film recurs characters/product), then `/s3s-shotlist`.
+4. **Already have real photos** of your product/person/place → skip references, attach the photos with `@tag` names, go straight to `/s3s-interview` or `/s3s-shotlist`.
 
 `@tag` names in prompts match the user's Seedance Elements panel, so images auto-attach at generate time.
 
@@ -70,7 +79,7 @@ pi / opencode equivalents: `codex_generate_image` for gpt-image-2, `comfyeditor_
 pi install https://github.com/madearga/s3s
 ```
 
-Slash commands (after restart): `/s3s`, `/s3s-references`, `/s3s-interview`, `/s3s-shotlist`.
+Slash commands (after restart): `/s3s`, `/s3s-analyze`, `/s3s-variations`, `/s3s-references`, `/s3s-interview`, `/s3s-shotlist`.
 
 ### opencode
 
@@ -82,7 +91,7 @@ After `pi install` (or a plain `git clone`), link skills + commands into opencod
 
 The script symlinks (never copies) and self-cleans dangling symlinks when a skill/command is removed from the repo, so `pi update --extensions` or `git pull` keeps opencode in sync automatically. Restart opencode afterwards.
 
-Slash commands: `/s3s`, `/s3s-references`, `/s3s-interview`, `/s3s-shotlist`. Skills also auto-load via opencode's `skill` tool when you describe a task without invoking a command.
+Slash commands: `/s3s`, `/s3s-analyze`, `/s3s-variations`, `/s3s-references`, `/s3s-interview`, `/s3s-shotlist`. Skills also auto-load via opencode's `skill` tool when you describe a task without invoking a command.
 
 ### opencode (project-local, no global install)
 
@@ -94,9 +103,11 @@ Clone this repo as your project root. opencode auto-discovers `.agents/skills/*/
 s3s/
 ├── package.json              # pi manifest (skills + prompts)
 ├── install-opencode.sh       # opencode global symlinks (idempotent, self-cleaning)
-├── prompts/                  # pi slash commands (4)
-├── .opencode/commands/       # opencode slash commands (4, same names)
+├── prompts/                  # pi slash commands (6)
+├── .opencode/commands/       # opencode slash commands (6, same names)
 └── .agents/skills/           # skills (pi manifest + opencode discovery)
+    ├── seedance-shotlist-analyze/SKILL.md
+    ├── seedance-shotlist-variations/SKILL.md
     ├── seedance-make-character/SKILL.md
     ├── seedance-make-location/SKILL.md
     ├── seedance-make-prop/SKILL.md
@@ -107,6 +118,8 @@ s3s/
 ## Usage
 
 ```
+/s3s-analyze https://example.com/reference-ad.mp4
+/s3s-variations A man places a ceramic mug on a wooden cafe counter and looks up at camera — give me 10 ways to shoot this.
 /s3s-references A headphone ad: hero is a 20yo man with curly auburn hair, product is cream over-ear ANC headphones, locations are a sage kitchen + Brooklyn street + stadium + office, props are running shoes + backpack + moka pot + mug
 /s3s-interview I have an idea about a surgeon coming home from a 36-hour shift
 /s3s-shotlist Anna comes home soaking wet from the rain. Marco is on the couch, looks up, says nothing. She walks past him to the bedroom.

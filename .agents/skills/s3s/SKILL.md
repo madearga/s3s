@@ -1,6 +1,6 @@
 ---
 name: s3s
-description: "Seedance 2.0 shotlist orchestrator — the full asset-to-shotlist workflow in one skill. Auto-loads when the user wants to make a Seedance 2.0 video and needs the whole pipeline: lock the references (character / location / product / prop), develop the creative brief, then build the editable HTML shotlist with @tag image references bound into every prompt. Trigger on 'make a Seedance video', 'I have a video idea', 'turn my script into a shotlist', 'build the assets and the shotlist', 'cinematic ad workflow', or any request that spans more than one stage of the s3s pipeline. Routes to seedance-make-character / seedance-make-location / seedance-make-prop (Stage 1), seedance-shotlist-interview (Stage 2), and seedance-shotlist-director (Stage 3) based on what the user has and what they're missing. For a single stage only, invoke that stage's skill directly instead."
+description: "Seedance 2.0 shotlist orchestrator — the full asset-to-shotlist workflow in one skill. Auto-loads when the user wants to make a Seedance 2.0 video and needs the whole pipeline: analyze a reference clip, generate shot variations, lock the references (character / location / product / prop), develop the creative brief, then build the editable HTML shotlist with @tag image references bound into every prompt. Trigger on 'make a Seedance video', 'analyze this clip', 'give me 10 shot options', 'I have a video idea', 'turn my script into a shotlist', 'build the assets and the shotlist', 'cinematic ad workflow', or any request that spans more than one stage of the s3s pipeline. Routes to seedance-shotlist-analyze, seedance-shotlist-variations, seedance-make-character / seedance-make-location / seedance-make-prop (assets), seedance-shotlist-interview (brief), and seedance-shotlist-director (HTML) based on what the user has and what they're missing. For a single stage only, invoke that stage's skill directly instead."
 license: MIT
 user-invocable: true
 tags:
@@ -39,6 +39,14 @@ seedance-make-prop
 ## Routing logic
 
 Decide based on what the user gives you. Check in this order:
+
+0. **Video reference to study** — the input is an existing ad/reel/clip the user wants broken down or recreated:
+   - Load `seedance-shotlist-analyze`
+   - If the user wants the clip recreated afterward, route from the analysis into Stage 1 / Stage 2 / Stage 3 as appropriate.
+
+0b. **One moment, multiple options** — the input is one scene/beat and the user wants several camera/composition choices:
+   - Load `seedance-shotlist-variations`
+   - After the user picks a preferred option, route that chosen variation into `seedance-shotlist-director`.
 
 1. **Asset / reference request** — the input mentions locking, building, or generating an asset without yet describing a scene to shoot ("lock the hero", "build the character sheet", "product sheet for…", "location reference", "prop turnaround", "make the assets first"):
    - Load and run the matching Stage 1 skill(s):
