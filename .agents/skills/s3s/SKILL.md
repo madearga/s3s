@@ -1,6 +1,6 @@
 ---
 name: s3s
-description: "Seedance 2.0 shotlist orchestrator — the full asset-to-shotlist workflow in one skill. Auto-loads when the user wants to make a Seedance 2.0 / Higgsfield video and needs the whole pipeline: lock the references (character / location / product / prop), develop the creative brief, then build the editable HTML shotlist with @tag image references bound into every prompt. Trigger on 'make a Seedance video', 'I have a video idea', 'turn my script into a shotlist', 'build the assets and the shotlist', 'cinematic ad workflow', or any request that spans more than one stage of the s3s pipeline. Routes to seedance-make-character / seedance-make-location / seedance-make-prop (Stage 1), seedance-shotlist-interview (Stage 2), and seedance-shotlist-director (Stage 3) based on what the user has and what they're missing. For a single stage only, invoke that stage's skill directly instead."
+description: "Seedance 2.0 shotlist orchestrator — the full asset-to-shotlist workflow in one skill. Auto-loads when the user wants to make a Seedance 2.0 video and needs the whole pipeline: lock the references (character / location / product / prop), develop the creative brief, then build the editable HTML shotlist with @tag image references bound into every prompt. Trigger on 'make a Seedance video', 'I have a video idea', 'turn my script into a shotlist', 'build the assets and the shotlist', 'cinematic ad workflow', or any request that spans more than one stage of the s3s pipeline. Routes to seedance-make-character / seedance-make-location / seedance-make-prop (Stage 1), seedance-shotlist-interview (Stage 2), and seedance-shotlist-director (Stage 3) based on what the user has and what they're missing. For a single stage only, invoke that stage's skill directly instead."
 license: MIT
 user-invocable: true
 tags:
@@ -8,7 +8,7 @@ tags:
   - orchestrator
   - seedance-20
   - shotlist
-  - higgsfield
+  - the target platform
 metadata:
   version: "1.0.0"
   updated: "2026-06-28"
@@ -64,7 +64,7 @@ The whole pipeline hinges on this. Do not lose data between stages.
 ### Stage 1 → Stage 2/3 (make-* → interview/director)
 
 For each asset the make-* skill produced:
-- `@tag` (short, lowercase, hyphenated — must match the user's Seedance/Higgsfield Elements panel exactly)
+- `@tag` (short, lowercase, hyphenated — must match the user's Seedance Elements panel exactly)
 - asset type (character / location / product / prop)
 - **verbatim reference prompt text** (Stage 3 embeds this in the HTML)
 - recommended image model
@@ -98,7 +98,7 @@ pi / opencode equivalents: `codex_generate_image` for gpt-image-2, `comfyeditor_
 ## Output
 
 Stage 3 saves `shotlist.html` to a platform-aware path and opens it:
-- Higgsfield / cloud Linux container → `/mnt/user-data/outputs/shotlist.html`
+- cloud Linux container → `/mnt/user-data/outputs/shotlist.html`
 - macOS / Linux desktop → `~/Desktop/shotlist.html`
 - Windows → `%USERPROFILE%\Desktop\shotlist.html`
 
@@ -109,13 +109,13 @@ Stage 3 saves `shotlist.html` to a platform-aware path and opens it:
   - intake only → `seedance-shotlist-interview` (or `/s3s-interview`)
   - shotlist only → `seedance-shotlist-director` (or `/s3s-shotlist`)
 - The user wants to revise an existing `shotlist.html` → go straight to `seedance-shotlist-director` (it handles revisions in place).
-- The user is not making a Seedance / Higgsfield video at all → this skill is not relevant.
+- The user is not making a Seedance / the target platform video at all → this skill is not relevant.
 
 ## Rules
 
 - You orchestrate; you do not generate prompts, sheets, or HTML yourself. Each stage's skill owns its work.
 - Carry the full hand-off payload between stages — losing the reference prompt text or the `@tag` list breaks Stage 3's conditional rendering.
-- `@tag` names are binding across the whole pipeline — must match the user's Seedance/Higgsfield Elements panel exactly.
+- `@tag` names are binding across the whole pipeline — must match the user's Seedance Elements panel exactly.
 - English prompts only inside the HTML, even if the user writes in another language.
 - If a stage's skill is missing or fails to load, tell the user which skill is needed and stop — do not improvise that stage's work.
 - One `shotlist.html` per project. Revisions update the same file; do not create `shotlist-2.html` etc. unless the user asks for a variant.

@@ -1,6 +1,6 @@
 # s3s
 
-Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview** + **HTML shotlist director** with `@tag` image reference binding. Dual-compatible: runs in **pi** and **opencode**. Patterns adapted from the [Higgsfield cinematic ad workflow](https://higgsfield.ai/blog/cinematic_headphones).
+Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview** + **HTML shotlist director** with `@tag` image reference binding. Dual-compatible: runs in **pi** and **opencode**. Patterns adapted from the [the target platform cinematic ad workflow](https://the target platform.ai/blog/cinematic_headphones).
 
 ## What's inside — 5 skills, 4 slash commands
 
@@ -47,7 +47,7 @@ Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview**
 2. **Script/treatment ready, no assets** → `/s3s-references` (if the film recurs characters/product), then `/s3s-shotlist`.
 3. **Already have real photos** of your product/person/place → skip references, attach the photos with `@tag` names, go straight to `/s3s-interview` or `/s3s-shotlist`.
 
-`@tag` names in prompts match the user's Seedance/Higgsfield Elements panel, so images auto-attach at generate time.
+`@tag` names in prompts match the user's Seedance Elements panel, so images auto-attach at generate time.
 
 ## Per-asset model differentiation
 

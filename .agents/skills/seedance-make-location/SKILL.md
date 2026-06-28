@@ -1,6 +1,6 @@
 ---
 name: seedance-make-location
-description: "Generate locked location reference prompts for any Seedance 2.0 / Higgsfield production. Genre-agnostic. Use when the user needs a stable location image to keep a room/place identical across every cut. Trigger on 'location reference', 'lock the location', 'make the kitchen', 'establishing shot', 'location sheet', or when asset building reaches the location step. Produces copy-ready English prompt templates (parameterized) — a short 3/4 template for simple rooms and a full atmospheric establishing-shot template for hero locations. The 3/4 angle is mandatory (never flat head-on) because depth is what the camera needs to move through. Returns a @tag per location and hands the prompt text to seedance-shotlist-director to embed in the HTML output."
+description: "Generate locked location reference prompts for any Seedance 2.0 production. Genre-agnostic. Use when the user needs a stable location image to keep a room/place identical across every cut. Trigger on 'location reference', 'lock the location', 'make the kitchen', 'establishing shot', 'location sheet', or when asset building reaches the location step. Produces copy-ready English prompt templates (parameterized) — a short 3/4 template for simple rooms and a full atmospheric establishing-shot template for hero locations. The 3/4 angle is mandatory (never flat head-on) because depth is what the camera needs to move through. Returns a @tag per location and hands the prompt text to seedance-shotlist-director to embed in the HTML output."
 license: MIT
 user-invocable: true
 tags:
@@ -43,17 +43,17 @@ Locations are photoreal cinematic stills. Match the model to the context the use
 
 Rule of thumb in pi/opencode: **generate every location in Nano Banana (`comfyeditor_image_generate` provider `gemini`).** GPT Image 2 can render a room but tends toward a clean studio look; locations need lived-in atmosphere and natural light, which Nano Banana handles better.
 
-### In Higgsfield (Cinematic Locations available)
+### On the target platform (Cinematic Locations available)
 
 | Asset | Best model | Why |
 |---|---|---|
 | **Location still** | **Cinematic Locations** | Photoreal cinematic depth, natural light, atmospheric haze — what the camera needs |
 
-Rule of thumb in Higgsfield: **generate every location in Cinematic Locations.** GPT Image 2 tends toward a clean studio look; locations need lived-in atmosphere.
+Rule of thumb On the target platform: **generate every location in Cinematic Locations.** GPT Image 2 tends toward a clean studio look; locations need lived-in atmosphere.
 
 ### Detect the context
 
-- If the user mentions Higgsfield, Cinematic Locations, or is running inside the Higgsfield app → use the Higgsfield column.
+- If the user mentions the target platform, Cinematic Locations, or is running inside the target app/platform → use the the target platform column.
 - Otherwise → use the pi/opencode column. **Default to pi/opencode** when unsure.
 
 If the user has a real photo of the actual place, skip generation — attach it with a `@tag`.
@@ -142,7 +142,7 @@ Photorealistic, ultra high detail, 16:9, no on-screen text, no visible brand log
 - **English prompts only.**
 - **Fill every `[bracket]`** — placeholder text produces generic output.
 - **3/4 angle always** — never flat head-on; depth is what the camera needs.
-- **One `@tag` per location** — must match the user's Seedance/Higgsfield Elements panel exactly.
+- **One `@tag` per location** — must match the user's Seedance Elements panel exactly.
 - **Continuity carry** — a location's `@tag` recurs in every prompt of every scene set in that location.
 - **Examples are patterns, not literal copy targets.** Fill from the user's brief.
 

@@ -24,6 +24,6 @@ $ARGUMENTS
 
 - Load the relevant skill(s) via the skill tool before acting. Do not improvise the workflow — follow the skill's SKILL.md exactly.
 - English prompts only inside the HTML, even if the user writes in another language.
-- Output the final `shotlist.html` to `~/Desktop/shotlist.html` on macOS (the skill's default `/mnt/user-data/outputs/` is a Linux/Higgsfield path — adapt to the user's platform).
+- Output the final `shotlist.html` to `~/Desktop/shotlist.html` on macOS (the skill's default `/mnt/user-data/outputs/` is a cloud-container path — adapt to the user's platform).
 - Open the HTML in the default browser after writing it.
 - If `@tag` image references are involved, list them in the Elements block of the HTML and bind them into every prompt's Characters/Scene/CUT lines.

@@ -30,7 +30,7 @@ This is **cinema, not a clip**. You are not chopping a script into beats — you
 This skill accepts input from three paths:
 
 1. **Direct path** — the user arrives with a finished script, scene breakdown, or treatment. Skip the interview, read it as a director, build the shotlist.
-2. **Interview path** — `seedance-shotlist-interview` already ran and produced: a mini-treatment, switchable assumptions, a production brief with directorial voice + per-scene setup, and an element list of `@tag` image references. Receive that hand-off, do not re-interview, and build the shotlist from the brief. The `@tag` element list is binding — every named asset (`@hero`, `@kitchen`, `@headphones`) must appear in the Characters/Scene/CUT lines exactly as named, so the user's Seedance/Higgsfield Elements panel auto-attaches the right image per prompt.
+2. **Interview path** — `seedance-shotlist-interview` already ran and produced: a mini-treatment, switchable assumptions, a production brief with directorial voice + per-scene setup, and an element list of `@tag` image references. Receive that hand-off, do not re-interview, and build the shotlist from the brief. The `@tag` element list is binding — every named asset (`@hero`, `@kitchen`, `@headphones`) must appear in the Characters/Scene/CUT lines exactly as named, so the user's Seedance Elements panel auto-attaches the right image per prompt.
 3. **Asset-built path** — `seedance-make-character`, `seedance-make-location`, and/or `seedance-make-prop` already ran and produced reference-sheet prompts + `@tag` element list. Receive both: (a) the `@tag` element list to bind into Characters/Scene/CUT lines, AND (b) the **reference prompt text itself** (verbatim) to embed in the HTML's **Asset Reference Prompts** section at the top of the document. The user then has one HTML file that covers the whole production: build the assets first (top section), then shoot the film (scenes below).
 
 If the user arrives with a vague idea and no script, route them to `seedance-shotlist-interview` first — do not build the shotlist from a thin premise.
@@ -48,7 +48,7 @@ When an element list of `@tag` references is provided (either from the interview
 
 If no `@tag` list is provided, fall back to prose-only character anchors (the original behavior). Prose mode and `@tag` mode are mutually exclusive per shotlist — do not mix.
 
-The `@tag` names must match exactly what the user names in their Seedance/Higgsfield Elements panel. That match is what auto-attaches images at generate time.
+The `@tag` names must match exactly what the user names in their Seedance Elements panel. That match is what auto-attaches images at generate time.
 
 ---
 
@@ -298,7 +298,7 @@ When the user gives you a script (or scene, or idea):
 5. **Write each prompt** following the strict structure above. Style Prefix, Characters, Scene + Geo-spatial, CUT 1, CUT 2, etc.
 6. **Generate the HTML** using the template approach below.
 7. **Save to a platform-aware output path** and present it:
-   - Higgsfield / cloud Linux container: `/mnt/user-data/outputs/shotlist.html`
+   - cloud Linux container: `/mnt/user-data/outputs/shotlist.html`
    - macOS / Linux desktop: `~/Desktop/shotlist.html`
    - Windows: `%USERPROFILE%\Desktop\shotlist.html`
    Detect the platform from environment (`$HOME`, `$USERPROFILE`, existence of `/mnt/user-data/`). When called from a slash command that passes an explicit output path, use that. Then open the file in the default browser.
@@ -597,7 +597,7 @@ The `data-scene` attribute on the checkbox uses the scene number as a string. If
 
 ### Elements list block (`{{ELEMENTS_LIST_BLOCK}}`)
 
-If the shotlist uses `@tag` image references, render a collapsible Elements list between the Style Prefix and the scenes so the user has a single source of truth for what each `@tag` maps to. The tag names here must match the user's Seedance/Higgsfield Elements panel exactly.
+If the shotlist uses `@tag` image references, render a collapsible Elements list between the Style Prefix and the scenes so the user has a single source of truth for what each `@tag` maps to. The tag names here must match the user's Seedance Elements panel exactly.
 
 ```html
 <details class="elements-list">
@@ -631,13 +631,13 @@ When reference prompts ARE present, render a collapsible block between the howto
 ```html
 <details class="asset-refs" open>
   <summary>Asset Reference Prompts (build these first, then shoot the scenes)</summary>
-  <div class="asset-note">Run each prompt in the recommended image model (see each make-* skill). Attach the result in your Seedance/Higgsfield Elements panel using the exact @tag name, so the scene prompts below auto-attach it.</div>
+  <div class="asset-note">Run each prompt in the recommended image model (see each make-* skill). Attach the result in your Seedance Elements panel using the exact @tag name, so the scene prompts below auto-attach it.</div>
 
   <!-- One .prompt-block per asset that has a reference prompt in the hand-off. Replace the «...» with the verbatim, HTML-escaped prompt text. -->
 
   <div class="prompt-block">
     <div class="prompt-label">
-      <span>@hero — character sheet · GPT Image 2 (pi/opencode) or Soul Cinema (Higgsfield)</span>
+      <span>@hero — character sheet · GPT Image 2 (pi/opencode) or Soul Cinema (the target platform)</span>
       <button class="copy-btn">Copy</button>
     </div>
     <pre class="prompt">«paste the verbatim @hero character-sheet prompt here, HTML-escaped»</pre>
@@ -653,7 +653,7 @@ When reference prompts ARE present, render a collapsible block between the howto
 
   <div class="prompt-block">
     <div class="prompt-label">
-      <span>@kitchen — location · Nano Banana (pi/opencode) or Cinematic Locations (Higgsfield)</span>
+      <span>@kitchen — location · Nano Banana (pi/opencode) or Cinematic Locations (the target platform)</span>
       <button class="copy-btn">Copy</button>
     </div>
     <pre class="prompt">«paste the verbatim @kitchen location prompt here, HTML-escaped»</pre>
@@ -669,7 +669,7 @@ When reference prompts ARE present, render a collapsible block between the howto
 </details>
 ```
 
-Each `.prompt-block` label shows the `@tag`, the asset type, and the recommended model (so the user knows which tool to paste it into). **Pick the model by context**: if the user is in pi/opencode, lead with the pi/opencode primary (GPT Image 2 for character sheets + products/props, Nano Banana for locations); if they're in Higgsfield, lead with the Higgsfield tool (Soul Cinema for characters, Cinematic Locations for locations, GPT Image 2 for products/props). The `open` attribute on `<details>` makes the section expanded by default — assets come first in the production flow. The `«...»` markers in the example above are fill slots for the agent — **the shipped HTML must contain only concrete, HTML-escaped prompt text, never the `«»` markers or `[...]` placeholders.**
+Each `.prompt-block` label shows the `@tag`, the asset type, and the recommended model (so the user knows which tool to paste it into). **Pick the model by context**: if the user is in pi/opencode, lead with the pi/opencode primary (GPT Image 2 for character sheets + products/props, Nano Banana for locations); if they're On the target platform, lead with the the target platform tool (Soul Cinema for characters, Cinematic Locations for locations, GPT Image 2 for products/props). The `open` attribute on `<details>` makes the section expanded by default — assets come first in the production flow. The `«...»` markers in the example above are fill slots for the agent — **the shipped HTML must contain only concrete, HTML-escaped prompt text, never the `«»` markers or `[...]` placeholders.**
 
 The existing copy-button JS at the bottom of the template already selects every `.copy-btn` on the page, so it picks up the asset-refs blocks automatically with no extra script.
 

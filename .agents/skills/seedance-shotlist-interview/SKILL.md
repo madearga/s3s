@@ -85,7 +85,7 @@ Ask the user to attach each image and give it a short `@name`:
 - `@headphones` — product sheet, front + 3/4 views
 - `@sneakers` — prop turnaround
 
-The `@name` chosen here is binding: the same `@tag` will appear in the shotlist prompts (via `seedance-shotlist-director`) AND in the user's Seedance/Higgsfield Elements panel, so images auto-attach when generating.
+The `@name` chosen here is binding: the same `@tag` will appear in the shotlist prompts (via `seedance-shotlist-director`) AND in the user's Seedance Elements panel, so images auto-attach when generating.
 
 If the user has no real material yet, offer to build reference sheets first (Stage 1 below) using GPT Image 2 / Nano Banana / Seedance character sheets. Default to skipping asset intake if the user has nothing to attach — the shotlist director works fine with prose-only character anchors.
 

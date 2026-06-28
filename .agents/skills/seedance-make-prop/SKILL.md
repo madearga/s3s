@@ -1,6 +1,6 @@
 ---
 name: seedance-make-prop
-description: "Generate locked product and prop reference prompts for any Seedance 2.0 / Higgsfield production. Genre-agnostic. Use when the user needs a stable product or prop image to keep it identical across every cut — a hero product, a recurring prop, or an original unbranded design. Trigger on 'product reference', 'product sheet', 'prop turnaround', 'lock the product', 'make the prop', or when asset building reaches the product/prop step. Produces copy-ready English prompt templates (parameterized) — front + 3/4 from a source image, an original-design orthographic turnaround (no branding), or a simple single-view studio shot. Returns a @tag per asset and hands the prompt text to seedance-shotlist-director to embed in the HTML output."
+description: "Generate locked product and prop reference prompts for any Seedance 2.0 production. Genre-agnostic. Use when the user needs a stable product or prop image to keep it identical across every cut — a hero product, a recurring prop, or an original unbranded design. Trigger on 'product reference', 'product sheet', 'prop turnaround', 'lock the product', 'make the prop', or when asset building reaches the product/prop step. Produces copy-ready English prompt templates (parameterized) — front + 3/4 from a source image, an original-design orthographic turnaround (no branding), or a simple single-view studio shot. Returns a @tag per asset and hands the prompt text to seedance-shotlist-director to embed in the HTML output."
 license: MIT
 user-invocable: true
 tags:
@@ -34,7 +34,7 @@ Skip if the user already has a real photo of the actual product/prop — attach 
 
 ## Recommended image model
 
-Products and props split by case. GPT Image 2 is the primary tool in both pi/opencode and Higgsfield for product/prop sheets.
+Products and props split by case. GPT Image 2 is the primary tool in both pi/opencode and the target platform for product/prop sheets.
 
 ### In pi / opencode
 
@@ -46,7 +46,7 @@ Products and props split by case. GPT Image 2 is the primary tool in both pi/ope
 
 Rule of thumb in pi/opencode: **products and props go to GPT Image 2 (`codex_generate_image`).** It handles both the from-photo sheet (case 1) and the original-design turnaround with strict no-branding (case 2) better than the cinematic models. Use Nano Banana only for case 3 when you want a softer photoreal look on a simple prop.
 
-### In Higgsfield
+### On the target platform
 
 | Case | Best model | Why |
 |---|---|---|
@@ -54,11 +54,11 @@ Rule of thumb in pi/opencode: **products and props go to GPT Image 2 (`codex_gen
 | **Case 2 — original unbranded turnaround** | **GPT Image 2** | Strongest instruction adherence — respects "no branding", renders clean studio product sheets |
 | **Case 3 — simple single-view prop** | **GPT Image 2** or **Nano Banana** | Either works for a single clean studio shot |
 
-Rule of thumb in Higgsfield: **products and props go to GPT Image 2.** Use Nano Banana only for case 3 when you want a softer photoreal look.
+Rule of thumb On the target platform: **products and props go to GPT Image 2.** Use Nano Banana only for case 3 when you want a softer photoreal look.
 
 ### Detect the context
 
-- If the user mentions Higgsfield or is running inside the Higgsfield app → use the Higgsfield section.
+- If the user mentions the target platform or is running inside the target app/platform → use the the target platform section.
 - Otherwise → use the pi/opencode section. **Default to pi/opencode** when unsure.
 
 If the user already has a real photo of the actual product, case 1 (GPT Image 2) still helps by normalizing it into a clean sheet — but you can also attach the raw photo directly with a `@tag` and skip generation.
@@ -168,7 +168,7 @@ A worn leather-bound photo album, closed, brass corner brackets, a faint water r
 - **Fill every `[bracket]`** — placeholder text produces generic output.
 - **No branding** on original product/prop sheets (case 2) — original designs only, no real-brand logos or lookalikes.
 - **Plain solid grey background** for product/prop sheets — maximizes the model's win rate.
-- **One `@tag` per object** — must match the user's Seedance/Higgsfield Elements panel exactly.
+- **One `@tag` per object** — must match the user's Seedance Elements panel exactly.
 - **Continuity carry** — a product/prop `@tag` recurs in every prompt of every scene where the object is visible.
 - **Examples are patterns, not literal copy targets.** Fill from the user's brief.
 

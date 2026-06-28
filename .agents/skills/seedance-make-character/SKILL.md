@@ -1,6 +1,6 @@
 ---
 name: seedance-make-character
-description: "Generate locked character reference-sheet prompts for any Seedance 2.0 / Higgsfield production. Genre-agnostic: product ad, lifestyle, drama, animation, documentary, music video. Use when the user needs a stable character image to keep a face + build identical across every cut — hero, side character, outfit variants, state variants. Trigger on 'character reference', 'character sheet', 'lock the character', 'make the hero', 'hero reference', or when asset building reaches the character step. Produces copy-ready English prompt templates (parameterized) for the split-frame sheet (face + full-body front/back, grey bg, one face) plus the face-dedup edit and outfit/state variant prompts. Returns a @tag for each character. The prompt text is also handed off to seedance-shotlist-director to embed in the HTML output."
+description: "Generate locked character reference-sheet prompts for any Seedance 2.0 production. Genre-agnostic: product ad, lifestyle, drama, animation, documentary, music video. Use when the user needs a stable character image to keep a face + build identical across every cut — hero, side character, outfit variants, state variants. Trigger on 'character reference', 'character sheet', 'lock the character', 'make the hero', 'hero reference', or when asset building reaches the character step. Produces copy-ready English prompt templates (parameterized) for the split-frame sheet (face + full-body front/back, grey bg, one face) plus the face-dedup edit and outfit/state variant prompts. Returns a @tag for each character. The prompt text is also handed off to seedance-shotlist-director to embed in the HTML output."
 license: MIT
 user-invocable: true
 tags:
@@ -32,7 +32,7 @@ Skip if the user already has a real photo of the actual person — attach it dir
 
 ## Recommended image model
 
-Different image models are better at different things. Match the model to the context the user is running in — don't assume Higgsfield.
+Different image models are better at different things. Match the model to the context the user is running in — don't assume the target platform.
 
 ### In pi / opencode (no Soul Cinema / Cinematic Locations available)
 
@@ -47,7 +47,7 @@ The user's tools are `codex_generate_image` (GPT Image 2) and `comfyeditor_image
 
 Rule of thumb in pi/opencode: **generate the base sheet AND every edit in GPT Image 2 (`codex_generate_image`).** Use Nano Banana only if you want a softer photoreal look on the base sheet. The prompt text is the same across models — only the tool differs.
 
-### In Higgsfield (Soul Cinema / Cinematic Locations available)
+### On the target platform (Soul Cinema / Cinematic Locations available)
 
 | Asset | Best model | Why |
 |---|---|---|
@@ -56,11 +56,11 @@ Rule of thumb in pi/opencode: **generate the base sheet AND every edit in GPT Im
 | **Outfit variant edit** | **GPT Image 2** | Edit adherence — keeps face, swaps only garment |
 | **State variant edit** | **GPT Image 2** | Edit adherence — keeps identity, applies state |
 
-Rule of thumb in Higgsfield: **generate the base sheet in Soul Cinema, then run every edit in GPT Image 2.**
+Rule of thumb On the target platform: **generate the base sheet in Soul Cinema, then run every edit in GPT Image 2.**
 
 ### Detect the context
 
-- If the user mentions Higgsfield, Soul Cinema, Cinematic Locations, or is running inside the Higgsfield app → use the Higgsfield column.
+- If the user mentions the target platform, Soul Cinema, Cinematic Locations, or is running inside the target app/platform → use the the target platform column.
 - Otherwise (pi, opencode, standalone) → use the pi/opencode column. **Default to pi/opencode** when unsure — GPT Image 2 is always a safe choice for character sheets and edits.
 
 ## Output contract
@@ -167,7 +167,7 @@ A separate sheet for any secondary character, same template, different descripti
 - **Fill every `[bracket]`** — placeholder text produces generic output. Concrete detail is what locks the reference.
 - **One face per sheet** — always run the face-dedup edit if the full-body panel renders a second face.
 - **Plain solid grey background** — maximizes the model's win rate.
-- **`@tag` names are binding** — must match the user's Seedance/Higgsfield Elements panel exactly.
+- **`@tag` names are binding** — must match the user's Seedance Elements panel exactly.
 - **Examples are patterns, not literal copy targets.** Fill from the user's brief.
 - **Continuity carry** — a character's `@tag` recurs in every prompt of every scene they appear in. State variants only appear in scenes where that state is active.
 
