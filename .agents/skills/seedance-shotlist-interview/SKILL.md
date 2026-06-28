@@ -89,15 +89,21 @@ The `@name` chosen here is binding: the same `@tag` will appear in the shotlist 
 
 If the user has no real material yet, offer to build reference sheets first (Stage 1 below) using GPT Image 2 / Nano Banana / Seedance character sheets. Default to skipping asset intake if the user has nothing to attach — the shotlist director works fine with prose-only character anchors.
 
-## Stage 1 — Asset Building (optional, when user has no reference images)
+## Stage 1 — Asset building (optional, when user has no reference images)
 
-For each missing reference, generate a locked sheet before the shotlist is built:
+For each missing reference, **load the `seedance-shotlist-references` skill** and follow its templates to produce a locked sheet before the shotlist is built. That skill owns the concrete prompt generation for:
 
-- **Character sheet** — split-frame: facial close-up (entire head in frame, nothing cropped) + full-body front + full-body back. Plain solid grey background for high win rate. One face per sheet — erase any duplicate face from the full-body panel. Same wardrobe across all panels. Example: `Cinematic character reference sheet, split-frame layout, photorealistic. Left panel — facial close-up: [description], entire head fully in frame. Right panel — full-body front and back views side by side: same person, same outfit, full height head-to-toe. Clean studio character sheet, plain solid grey background, soft diffused cinematic lighting.`
-- **Location** — 3/4 angle for depth (never flat head-on): `Modern [room], 3/4 angle, [time of day] light, photorealistic.`
-- **Prop sheet** — orthographic turnaround on neutral grey: `Product prop sheet, orthographic turnaround of [object] on flat neutral light-gray studio background. Same object shown from multiple angles in an even grid: side profile, top-down, 3/4 hero, rear, bottom. Soft even studio product lighting.`
+- **Character sheet** — split-frame facial close-up + full-body front/back, plain grey background, one face per sheet (with a face-dedup edit when needed).
+- **Outfit variant** — same face, different wardrobe for a specific scene.
+- **State variant** — same character, mid-film physical change (soaked, sweaty, injured).
+- **Side character** — separate sheet, same template.
+- **Product sheet** — front + 3/4 from a source image, or original-design orthographic turnaround with no branding.
+- **Location** — 3/4 angle establishing shot for depth (never flat head-on).
+- **Prop sheet** — clean studio shot or orthographic turnaround on neutral grey.
 
-Each generated sheet gets a `@name` and is attached to the chat before the shotlist director runs.
+Do not inline those prompt templates here — the references skill is the single source of truth for them. Hand the references skill the brief (characters, product, locations, props), receive back the `@tag` element list, then route forward to `seedance-shotlist-director`.
+
+If the user already has real photos (of their actual product, pet, person, place), skip reference generation — attach the real photo with a `@tag` and go straight to the asset intake mapping.
 
 ## Propose, Then Adjust
 
