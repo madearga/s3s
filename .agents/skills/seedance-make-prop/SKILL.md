@@ -30,7 +30,7 @@ This skill produces **copy-ready English prompt templates** (parameterized) for 
 - Asset building reaches the product/prop step.
 - The user says "make the headphones sheet", "lock the mug", "turnaround for the backpack".
 
-If the user is making an **ad / commercial / showcase / e-commerce** video, treat the product sheet as **mandatory** unless they already have a real locked product photo. In those cases, the product reference is the source of truth for continuity.
+If the user is making an **ad / commercial / showcase / e-commerce** video, treat the product sheet as **mandatory** unless they already have a real locked product photo. In those cases, the product reference is the source of truth for continuity, and the default generator for that sheet is **GPT Image 2**.
 
 Skip if the user already has a real photo of the actual product/prop — attach it directly with a `@tag`. (Case 1 below still helps by normalizing the photo into a clean sheet.)
 
@@ -46,7 +46,7 @@ Products and props split by case. GPT Image 2 is the primary tool in both pi/ope
 | **Case 2 — original unbranded turnaround** | **GPT Image 2** — `codex_generate_image` | Nano Banana |
 | **Case 3 — simple single-view prop** | **GPT Image 2** — `codex_generate_image` or **Nano Banana** — `comfyeditor_image_generate` provider `gemini` | either works |
 
-Rule of thumb in pi/opencode: **products and props go to GPT Image 2 (`codex_generate_image`).** It handles both the from-photo sheet (case 1) and the original-design turnaround with strict no-branding (case 2) better than the cinematic models. Use Nano Banana only for case 3 when you want a softer photoreal look on a simple prop.
+Rule of thumb in pi/opencode: **products and props go to GPT Image 2 (`codex_generate_image`).** If a dedicated product reference sheet is needed, GPT Image 2 is the default. It handles both the from-photo sheet (case 1) and the original-design turnaround with strict no-branding (case 2) better than the cinematic models. Use Nano Banana only for case 3 when you want a softer photoreal look on a simple prop.
 
 ### On the target platform
 
@@ -56,7 +56,7 @@ Rule of thumb in pi/opencode: **products and props go to GPT Image 2 (`codex_gen
 | **Case 2 — original unbranded turnaround** | **GPT Image 2** | Strongest instruction adherence — respects "no branding", renders clean studio product sheets |
 | **Case 3 — simple single-view prop** | **GPT Image 2** or **Nano Banana** | Either works for a single clean studio shot |
 
-Rule of thumb On the target platform: **products and props go to GPT Image 2.** Use Nano Banana only for case 3 when you want a softer photoreal look.
+Rule of thumb On the target platform: **products and props go to GPT Image 2.** If a dedicated product reference sheet is needed, GPT Image 2 is the default. Use Nano Banana only for case 3 when you want a softer photoreal look.
 
 ### Detect the context
 
@@ -174,6 +174,7 @@ A worn leather-bound photo album, closed, brass corner brackets, a faint water r
 - **Continuity carry** — a product/prop `@tag` recurs in every prompt of every scene where the object is visible.
 - In **Product Ad Consistency Mode**, this sheet is the **primary continuity lock** for the product. Character references or in-hand contextual refs do not override it.
 - A character holding the product can be useful for scale/context, but it is **not a replacement** for the product sheet in ad/commercial cases.
+- If the product sheet is needed, generate that sheet in **GPT Image 2** by default unless the user explicitly asks for another surface or already has a real locked product photo.
 - **Examples are patterns, not literal copy targets.** Fill from the user's brief.
 
 ## Hand-off

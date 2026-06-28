@@ -292,6 +292,7 @@ If the brief is clearly for an **ad / commercial / showcase / e-commerce** piece
 When active:
 
 - the hero product `@tag` is the **primary continuity lock**
+- if the product sheet must be generated, default that sheet to **GPT Image 2**
 - every selling scene must include that same hero product `@tag`
 - product close-ups, reveal shots, in-hand shots, and hero shots all bind the same product reference
 - the product sheet outranks character/context references for product geometry, material, color, and orientation

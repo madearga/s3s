@@ -74,6 +74,7 @@ This does **not** change the rest of s3s into a product-only workflow. It only a
 When active:
 
 1. **Product reference becomes mandatory** — route through `seedance-make-prop` unless the user already has a real locked product image.
+   - If a product sheet must be generated, default to **GPT Image 2** for that sheet.
 2. **Product is the primary continuity lock** — the product sheet is the source of truth; character variation must never redesign the product.
 3. **Every selling scene must bind the hero product `@tag`** — close-ups, in-hand shots, reveal shots, and hero shots all call the same product tag.
 4. **Character holding product is contextual only** — useful for scale and usage, but it never replaces the product sheet.
