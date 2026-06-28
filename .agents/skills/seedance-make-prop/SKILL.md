@@ -30,6 +30,8 @@ This skill produces **copy-ready English prompt templates** (parameterized) for 
 - Asset building reaches the product/prop step.
 - The user says "make the headphones sheet", "lock the mug", "turnaround for the backpack".
 
+If the user is making an **ad / commercial / showcase / e-commerce** video, treat the product sheet as **mandatory** unless they already have a real locked product photo. In those cases, the product reference is the source of truth for continuity.
+
 Skip if the user already has a real photo of the actual product/prop — attach it directly with a `@tag`. (Case 1 below still helps by normalizing the photo into a clean sheet.)
 
 ## Recommended image model
@@ -170,6 +172,8 @@ A worn leather-bound photo album, closed, brass corner brackets, a faint water r
 - **Plain solid grey background** for product/prop sheets — maximizes the model's win rate.
 - **One `@tag` per object** — must match the user's Seedance Elements panel exactly.
 - **Continuity carry** — a product/prop `@tag` recurs in every prompt of every scene where the object is visible.
+- In **Product Ad Consistency Mode**, this sheet is the **primary continuity lock** for the product. Character references or in-hand contextual refs do not override it.
+- A character holding the product can be useful for scale/context, but it is **not a replacement** for the product sheet in ad/commercial cases.
 - **Examples are patterns, not literal copy targets.** Fill from the user's brief.
 
 ## Hand-off

@@ -285,6 +285,19 @@ Motivate every camera move. The camera is a character; it has a reason to be whe
 
 The Style Prefix locks the global look (contre-jour, natural-only, 60:30:10). Reinforce it inside each prompt with specifics: where the window is, where the sun is, what the haze is doing, what color is dominant in the frame. This isn't redundant — it's how Seedance knows where to put the rim light.
 
+## Product Ad Consistency Mode (conditional)
+
+If the brief is clearly for an **ad / commercial / showcase / e-commerce** piece, activate **Product Ad Consistency Mode** while writing the shotlist.
+
+When active:
+
+- the hero product `@tag` is the **primary continuity lock**
+- every selling scene must include that same hero product `@tag`
+- product close-ups, reveal shots, in-hand shots, and hero shots all bind the same product reference
+- the product sheet outranks character/context references for product geometry, material, color, and orientation
+
+This is a **conditional mode**. Do not force it on drama / documentary / music video / non-ad cases.
+
 ---
 
 ## Workflow
@@ -725,3 +738,9 @@ Notice: the script gave you 28 words. The prompt is detailed because the **direc
 - **`@tag` mode vs prose mode** — pick one per shotlist, don't mix. In `@tag` mode, the same tag (`@hero`) recurs in every prompt of the same scene and the Elements list block lists every tag with its description. In prose mode, the Elements list block shows the empty-state line.
 - **Asset Reference Prompts block is conditional** — render it ONLY when reference-sheet prompts were handed off from `seedance-make-character` / `seedance-make-location` / `seedance-make-prop`. If no asset prompts were provided, omit the block entirely (no empty-state, no wrapper). The section simply doesn't appear.
 - **Interview hand-off** — when input comes from `seedance-shotlist-interview`, honor the directorial voice, per-scene setup, and `@tag` element list it produced. Do not re-interview. Build directly from the brief.
+- **Product-ad lint (warning mindset)** — in Product Ad Consistency Mode, check these before you finish:
+  - the hero product has a dedicated product `@tag`
+  - every selling scene binds that exact product `@tag`
+  - no product close-up relies only on a character/context ref when a product sheet should exist
+  - continuity language explicitly preserves the same geometry / material / color / orientation across cuts
+  If one of these is missing, warn and fix it inside the shotlist instead of silently shipping drift risk.

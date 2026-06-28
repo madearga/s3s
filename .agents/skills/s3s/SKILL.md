@@ -65,6 +65,21 @@ Decide based on what the user gives you. Check in this order:
 
 4. **Unsure** — ask one question: *"Do you already have a script, do you want to develop the idea together, or do you want to build the asset references (character/product/location) first?"* Then route per 1/2/3 above. Default to interview for newbie-style phrasing.
 
+## Product Ad Consistency Mode (conditional)
+
+If the user is clearly making a **product ad / commercial / showcase / e-commerce / sell-product** video, activate **Product Ad Consistency Mode**.
+
+This does **not** change the rest of s3s into a product-only workflow. It only adds stricter continuity discipline for ad cases.
+
+When active:
+
+1. **Product reference becomes mandatory** — route through `seedance-make-prop` unless the user already has a real locked product image.
+2. **Product is the primary continuity lock** — the product sheet is the source of truth; character variation must never redesign the product.
+3. **Every selling scene must bind the hero product `@tag`** — close-ups, in-hand shots, reveal shots, and hero shots all call the same product tag.
+4. **Character holding product is contextual only** — useful for scale and usage, but it never replaces the product sheet.
+
+Outside product ads, this mode stays off.
+
 ## Hand-off payload (what you carry between stages)
 
 The whole pipeline hinges on this. Do not lose data between stages.
@@ -120,6 +135,9 @@ Stage 3 saves `shotlist.html` to a platform-aware path and opens it:
 - The user is not making a Seedance / the target platform video at all → this skill is not relevant.
 
 ## Rules
+
+- Product Ad Consistency Mode is **conditional**, not global. Use it only for ads/commercial/showcase/e-commerce cases.
+- In product-ad mode, product consistency outranks performance variation.
 
 - You orchestrate; you do not generate prompts, sheets, or HTML yourself. Each stage's skill owns its work.
 - Carry the full hand-off payload between stages — losing the reference prompt text or the `@tag` list breaks Stage 3's conditional rendering.
