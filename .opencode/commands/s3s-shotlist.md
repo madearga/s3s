@@ -1,5 +1,6 @@
 ---
 description: Seedance 2.0 shotlist director — build the HTML shotlist directly from a script/treatment you already have. Skips the interview.
+argument-hint: "[paste your script or scene breakdown]"
 ---
 
 # /s3s-shotlist — Build Shotlist from Script

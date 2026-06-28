@@ -1,5 +1,6 @@
 ---
 description: Seedance 2.0 creative interview — for vague ideas with no script yet. Produces a mini-treatment + brief + @tag element list, then builds the shotlist HTML.
+argument-hint: "[your rough idea]"
 ---
 
 # /s3s-interview — Creative Interview (newbie-friendly)

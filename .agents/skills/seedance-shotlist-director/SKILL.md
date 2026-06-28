@@ -40,7 +40,7 @@ The `@tag` names must match exactly what the user names in their Seedance/Higgsf
 
 ## What you're producing
 
-A single HTML file (`shotlist.html`) saved to `/mnt/user-data/outputs/` and presented to the user. Structure:
+A single HTML file (`shotlist.html`) saved to a platform-aware output path and presented to the user. Structure:
 
 1. **Title bar** — project name (infer from script context, or use "Untitled" if unclear)
 2. **Global Style Prefix block** — collapsible, shown at top, applies to every prompt
@@ -168,7 +168,11 @@ When the user gives you a script (or scene, or idea):
 4. **Decide prompt count per scene.** Each prompt is one 15-second beat. A 12-second moment still gets one full prompt — fill the 15 seconds with the breath, the look, the held silence after the line. A 40-second confession = 3 prompts (e.g., 5a, 5b, 5c). Honest assessment: how many 15-second beats does this moment actually need to land?
 5. **Write each prompt** following the strict structure above. Style Prefix, Characters, Scene + Geo-spatial, CUT 1, CUT 2, etc.
 6. **Generate the HTML** using the template approach below.
-7. **Save to `/mnt/user-data/outputs/shotlist.html`** and present it.
+7. **Save to a platform-aware output path** and present it:
+   - Higgsfield / cloud Linux container: `/mnt/user-data/outputs/shotlist.html`
+   - macOS / Linux desktop: `~/Desktop/shotlist.html`
+   - Windows: `%USERPROFILE%\Desktop\shotlist.html`
+   Detect the platform from environment (`$HOME`, `$USERPROFILE`, existence of `/mnt/user-data/`). When called from a slash command that passes an explicit output path, use that. Then open the file in the default browser.
 
 ---
 
@@ -176,7 +180,7 @@ When the user gives you a script (or scene, or idea):
 
 This is critical: when the user asks you to change anything in the shotlist (rewrite scene 4, add an insert shot, split prompt 6 into two, change a character's wardrobe, add a new scene), you **re-generate the same HTML file with the changes applied**. Don't just describe the change in chat — update the document.
 
-Read the previous shotlist if it's still in context or in `/mnt/user-data/outputs/`, apply the user's edits, and write the updated file back. Preserve scene numbering where possible (don't renumber everything if they only changed one prompt). Preserve the Style Prefix unless they tell you to change it.
+Read the previous shotlist if it's still in context or at the platform-aware output path (see step 7), apply the user's edits, and write the updated file back. Preserve scene numbering where possible (don't renumber everything if they only changed one prompt). Preserve the Style Prefix unless they tell you to change it.
 
 The user's checkbox state persists in their browser via localStorage, so they don't lose their progress when you re-render the file (as long as scene numbers stay stable).
 
@@ -402,21 +406,31 @@ Use this as the HTML skeleton — fill in `{{PROJECT_TITLE}}`, `{{STYLE_PREFIX_T
     });
   });
 
-  // Copy buttons
+  // Copy buttons (with file:// fallback — navigator.clipboard can fail on local files)
   document.querySelectorAll('.copy-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const pre = btn.closest('.prompt-block').querySelector('pre.prompt');
-      navigator.clipboard.writeText(pre.textContent).then(() => {
+      const text = pre.textContent;
+      const onDone = () => {
         btn.classList.add('copied');
         const original = btn.textContent;
         btn.textContent = 'Copied';
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          btn.textContent = original;
-        }, 1500);
-      });
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = original; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onDone).catch(() => fallbackCopy(text, onDone));
+      } else {
+        fallbackCopy(text, onDone);
+      }
     });
   });
+  function fallbackCopy(text, onDone) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); onDone(); } catch(e) {}
+    document.body.removeChild(ta);
+  }
 </script>
 </body>
 </html>
@@ -483,17 +497,21 @@ This block is **conditional**: render it ONLY when the hand-off from `seedance-m
 
 When reference prompts ARE present, render a collapsible block between the howto note and the Style Prefix. It groups every asset-building prompt the user runs first (in the recommended image model) to lock each character / location / product / prop into a `@tag` sheet, before they shoot the scenes below. Each prompt has a Copy button. Reuse the existing `.prompt-block` / `.copy-btn` / `pre.prompt` styles so the copy + localStorage JS already handles them — no new JS needed.
 
+**The `<pre>` content must be the verbatim, HTML-escaped reference prompt text from the hand-off — never placeholder bracket text.** If the hand-off did not include a prompt for a `@tag`, omit that `@tag`'s block; do not render a block with `[...]` or `[full prompt text verbatim]` in it. One block per asset that actually has a prompt.
+
 ```html
 <details class="asset-refs" open>
   <summary>Asset Reference Prompts (build these first, then shoot the scenes)</summary>
   <div class="asset-note">Run each prompt in the recommended image model (see each make-* skill). Attach the result in your Seedance/Higgsfield Elements panel using the exact @tag name, so the scene prompts below auto-attach it.</div>
+
+  <!-- One .prompt-block per asset that has a reference prompt in the hand-off. Replace the «...» with the verbatim, HTML-escaped prompt text. -->
 
   <div class="prompt-block">
     <div class="prompt-label">
       <span>@hero — character sheet · Soul Cinema / Nano Banana</span>
       <button class="copy-btn">Copy</button>
     </div>
-    <pre class="prompt">[Cinematic character reference sheet ...full prompt text verbatim...]</pre>
+    <pre class="prompt">«paste the verbatim @hero character-sheet prompt here, HTML-escaped»</pre>
   </div>
 
   <div class="prompt-block">
@@ -501,7 +519,7 @@ When reference prompts ARE present, render a collapsible block between the howto
       <span>@hero — face dedup edit · GPT Image 2</span>
       <button class="copy-btn">Copy</button>
     </div>
-    <pre class="prompt">Erase the face from the full-body shot on the right panel.</pre>
+    <pre class="prompt">«paste the verbatim face-dedup edit prompt here»</pre>
   </div>
 
   <div class="prompt-block">
@@ -509,7 +527,7 @@ When reference prompts ARE present, render a collapsible block between the howto
       <span>@kitchen — location · Cinematic Locations / Nano Banana</span>
       <button class="copy-btn">Copy</button>
     </div>
-    <pre class="prompt">[A cinematic wide establishing shot ...full prompt text verbatim...]</pre>
+    <pre class="prompt">«paste the verbatim @kitchen location prompt here, HTML-escaped»</pre>
   </div>
 
   <div class="prompt-block">
@@ -517,12 +535,12 @@ When reference prompts ARE present, render a collapsible block between the howto
       <span>@product — product sheet · GPT Image 2</span>
       <button class="copy-btn">Copy</button>
     </div>
-    <pre class="prompt">[Make a product sheet with front and 3/4 perspective views...]</pre>
+    <pre class="prompt">«paste the verbatim @product sheet prompt here, HTML-escaped»</pre>
   </div>
 </details>
 ```
 
-Each `.prompt-block` label shows the `@tag`, the asset type, and the recommended model (so the user knows which tool to paste it into). The `open` attribute on `<details>` makes the section expanded by default — assets come first in the production flow.
+Each `.prompt-block` label shows the `@tag`, the asset type, and the recommended model (so the user knows which tool to paste it into). The `open` attribute on `<details>` makes the section expanded by default — assets come first in the production flow. The `«...»` markers in the example above are fill slots for the agent — **the shipped HTML must contain only concrete, HTML-escaped prompt text, never the `«»` markers or `[...]` placeholders.**
 
 The existing copy-button JS at the bottom of the template already selects every `.copy-btn` on the page, so it picks up the asset-refs blocks automatically with no extra script.
 

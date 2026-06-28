@@ -2,38 +2,65 @@
 
 Seedance 2.0 shotlist workflow — **reference sheets** + **creative interview** + **HTML shotlist director** with `@tag` image reference binding. Dual-compatible: runs in **pi** and **opencode**. Patterns adapted from the [Higgsfield cinematic ad workflow](https://higgsfield.ai/blog/cinematic_headphones).
 
-## What's inside — 3 skills
+## What's inside — 5 skills, 4 slash commands
 
-| Skill | Job | Slash command |
-|---|---|---|
-| **seedance-shotlist-references** | Generate locked reference-sheet prompts (character / product / location / prop + outfit & state variants) before the film is shot. One face per sheet, grey bg, 3/4 locations, no branding. | `/s3s-references` |
-| **seedance-shotlist-interview** | Newbie-friendly creative intake. Max 5 questions per batch (each with a default), feeling-to-film translation, Director's Read per scene. Output: mini-treatment + switchable assumptions + brief + `@tag` element list. Routes Stage 1 asset building to the references skill. | `/s3s-interview` |
-| **seedance-shotlist-director** | Builds an editable HTML shotlist from a script, treatment, or interview brief. Each prompt = 15 seconds; long scenes split into `3a/3b/3c`. Style Prefix, per-scene checkboxes (localStorage), Copy buttons, Elements list of `@tag` references that auto-attach in Seedance/Higgsfield. | `/s3s-shotlist` |
+### Skills (`.agents/skills/`)
 
-`/s3s` is the smart router — script/treatment → director, vague idea → interview, asset request → references.
+| Skill | Job |
+|---|---|
+| **seedance-make-character** | Generate locked character-sheet prompts (split-frame face + full-body, grey bg, one face) + face-dedup edit + outfit/state variants. Base sheet → Soul Cinema / Nano Banana; edits → GPT Image 2. |
+| **seedance-make-location** | Generate locked location prompts (short + full establishing shot, 3/4 angle mandatory). → Cinematic Locations / Nano Banana. |
+| **seedance-make-prop** | Generate locked product/prop prompts (from-source-photo sheet / original unbranded turnaround / simple single-view). → GPT Image 2. |
+| **seedance-shotlist-interview** | Newbie-friendly creative intake. Max 5 questions per batch (each with a stated concrete default), feeling-to-film translation, Director's Read per scene. Routes Stage 1 asset building to the 3 make-* skills and carries reference prompt text in the hand-off. |
+| **seedance-shotlist-director** | Builds an editable HTML shotlist from a script, treatment, or interview brief. 15-second prompts, split scenes (`3a/3b/3c`), Style Prefix, per-scene checkboxes (localStorage), Copy buttons (with file:// fallback), optional Elements list of `@tag` references, and a **conditional Asset Reference Prompts** section that renders only when reference prompts were handed off. |
+
+### Slash commands
+
+| Command | Routes to |
+|---|---|
+| `/s3s` | Smart router — asset request → make-* skills; script/treatment → director; vague idea → interview |
+| `/s3s-references` | Asset router → dispatches to make-character / make-location / make-prop based on input |
+| `/s3s-interview` | Force interview path (newbie intake) |
+| `/s3s-shotlist` | Force director path (build HTML from existing script) |
 
 ## The full workflow
 
 ```
-/s3s-references  →  lock every asset (character, product, location, prop) into @tag sheets
-        │
-        ↓  (element list of @tags)
+/s3s-references  →  lock every asset (character / product / location / prop) into @tag sheets
+        │           (make-character / make-location / make-prop, each in its best image model)
+        ↓  (@tag element list + verbatim reference prompt text)
 /s3s-interview   →  creative intake → mini-treatment + brief + directorial voice
         │           (or skip if you already have a script)
         ↓
-/s3s-shotlist    →  build the HTML shotlist, @tags bound into every prompt
-        │
+/s3s-shotlist    →  build the HTML shotlist:
+        │             - Asset Reference Prompts section (conditional — only if Stage 1 ran)
+        │             - Style Prefix
+        │             - Elements list (@tags)
+        │             - Scenes with @tags bound into every prompt
         ↓
    shotlist.html  →  copy prompts into Seedance, images auto-attach by @tag name
 ```
 
-## Two entry paths (three if you need references)
+## Three entry paths
 
 1. **Vague idea, no script, no assets** → `/s3s-references` first (lock assets), then `/s3s-interview`, then `/s3s-shotlist`.
 2. **Script/treatment ready, no assets** → `/s3s-references` (if the film recurs characters/product), then `/s3s-shotlist`.
 3. **Already have real photos** of your product/person/place → skip references, attach the photos with `@tag` names, go straight to `/s3s-interview` or `/s3s-shotlist`.
 
 `@tag` names in prompts match the user's Seedance/Higgsfield Elements panel, so images auto-attach at generate time.
+
+## Per-asset model differentiation
+
+Not everything goes to one image model. Each make-* skill maps its asset type to the best tool:
+
+| Asset | Best model |
+|---|---|
+| Character sheet (base) | Soul Cinema / Nano Banana (Gemini) |
+| Character edits (dedup / outfit / state) | GPT Image 2 |
+| Location | Cinematic Locations / Nano Banana |
+| Product / prop (all cases) | GPT Image 2 (case 3 also Nano Banana) |
+
+pi / opencode equivalents: `codex_generate_image` for gpt-image-2, `comfyeditor_image_generate` provider `gemini` for Nano Banana, `replicate`/`wavespeed`/`kie` for Flux/Seedream.
 
 ## Install
 
@@ -53,7 +80,7 @@ After `pi install` (or a plain `git clone`), link skills + commands into opencod
 ~/.pi/agent/git/github.com/madearga/s3s/install-opencode.sh
 ```
 
-The script symlinks (never copies), so `pi update --extensions` or `git pull` keeps opencode in sync automatically. Restart opencode afterwards. Run it again after this update to pick up the new `seedance-shotlist-references` skill and `/s3s-references` command.
+The script symlinks (never copies) and self-cleans dangling symlinks when a skill/command is removed from the repo, so `pi update --extensions` or `git pull` keeps opencode in sync automatically. Restart opencode afterwards.
 
 Slash commands: `/s3s`, `/s3s-references`, `/s3s-interview`, `/s3s-shotlist`. Skills also auto-load via opencode's `skill` tool when you describe a task without invoking a command.
 
@@ -66,13 +93,13 @@ Clone this repo as your project root. opencode auto-discovers `.agents/skills/*/
 ```
 s3s/
 ├── package.json              # pi manifest (skills + prompts)
-├── install-opencode.sh       # opencode global symlinks (idempotent)
-├── prompts/                  # pi slash commands
-│   ├── s3s.md  s3s-references.md  s3s-interview.md  s3s-shotlist.md
-├── .opencode/commands/       # opencode slash commands (same names)
-│   ├── s3s.md  s3s-references.md  s3s-interview.md  s3s-shotlist.md
+├── install-opencode.sh       # opencode global symlinks (idempotent, self-cleaning)
+├── prompts/                  # pi slash commands (4)
+├── .opencode/commands/       # opencode slash commands (4, same names)
 └── .agents/skills/           # skills (pi manifest + opencode discovery)
-    ├── seedance-shotlist-references/SKILL.md
+    ├── seedance-make-character/SKILL.md
+    ├── seedance-make-location/SKILL.md
+    ├── seedance-make-prop/SKILL.md
     ├── seedance-shotlist-interview/SKILL.md
     └── seedance-shotlist-director/SKILL.md
 ```

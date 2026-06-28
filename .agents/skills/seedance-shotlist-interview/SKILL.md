@@ -31,7 +31,7 @@ Quality bar: every question must be answerable by someone who has never heard th
 
 1. **Ask in pictures, not parameters.** Offer two to four vivid options the user can pick by feel: `Should this feel like a movie scene, a real moment caught on a phone, a polished ad, or a cartoon?` Never: `What camera style and aspect ratio?`
 2. **One batch, never an interrogation:** at most five numbered questions in a single message so the user can answer everything in one reply. Follow up only when an answer creates a real fork.
-3. **Every question ships with a default.** End it with `(not sure? I'll go with [default] — it works well)`. "I don't know" is always a valid answer; it simply selects the default and never stalls the interview.
+3. **Every question ships with a default.** End it with a phrasing like `(not sure? I'll go with a warm late-afternoon light — it works well)` — substitute the concrete default for that question, never leave the word "default" or any bracket. "I don't know" is always a valid answer; it simply selects the stated default and never stalls the interview.
 4. **One question, one decision.** Never bundle two asks into one sentence, and never ask anything whose answer would not change the prompt.
 5. **Keep their words.** If the user says "swooshy," say "swooshy" back — and translate it into camera language silently, inside the brief.
 6. **Expert detect:** if the user speaks production language fluently (shot list, lens, deliverables, LUT, coverage) or works for an agency or production, drop plain mode and run the professional intake instead (collect deliverables, territory, aspect ratio, approval owner, rights, post/delivery needs).
@@ -91,17 +91,15 @@ If the user has no real material yet, offer to build reference sheets first (Sta
 
 ## Stage 1 — Asset building (optional, when user has no reference images)
 
-For each missing reference, **load the `seedance-shotlist-references` skill** and follow its templates to produce a locked sheet before the shotlist is built. That skill owns the concrete prompt generation for:
+For each missing reference, **load the matching make-* skill** and follow its templates to produce a locked sheet before the shotlist is built. The make-* skills own the concrete prompt generation:
 
-- **Character sheet** — split-frame facial close-up + full-body front/back, plain grey background, one face per sheet (with a face-dedup edit when needed).
-- **Outfit variant** — same face, different wardrobe for a specific scene.
-- **State variant** — same character, mid-film physical change (soaked, sweaty, injured).
-- **Side character** — separate sheet, same template.
-- **Product sheet** — front + 3/4 from a source image, or original-design orthographic turnaround with no branding.
-- **Location** — 3/4 angle establishing shot for depth (never flat head-on).
-- **Prop sheet** — clean studio shot or orthographic turnaround on neutral grey.
+- **Characters** → `seedance-make-character` (split-frame sheet, face dedup, outfit/state variants; base sheet in Soul Cinema / Nano Banana, edits in GPT Image 2)
+- **Locations** → `seedance-make-location` (3/4 angle establishing shot, never flat head-on; Cinematic Locations / Nano Banana)
+- **Products / props** → `seedance-make-prop` (from-source-photo sheet, original unbranded turnaround, simple single-view; GPT Image 2)
 
-Do not inline those prompt templates here — the references skill is the single source of truth for them. Hand the references skill the brief (characters, product, locations, props), receive back the `@tag` element list, then route forward to `seedance-shotlist-director`.
+If the input mentions all three categories, run all three in order: characters → locations → products/props. The `/s3s-references` router command dispatches to them automatically if you prefer a single entry point.
+
+Do not inline those prompt templates here — the make-* skills are the single source of truth for them. Hand each make-* skill the relevant part of the brief, receive back **both** the `@tag` element list AND the **verbatim reference prompt text** (the director embeds that text in the HTML's Asset Reference Prompts section), then route forward to `seedance-shotlist-director`.
 
 If the user already has real photos (of their actual product, pet, person, place), skip reference generation — attach the real photo with a `@tag` and go straight to the asset intake mapping.
 
@@ -132,6 +130,7 @@ Return:
 - Mini-treatment in plain language
 - Assumptions with one-word switches
 - Element list (`@tag` → description, or "none — prose-only mode")
+- **Asset reference prompts (when Stage 1 ran)** — for each generated sheet: the `@tag`, the asset type (character / location / product / prop), the **verbatim reference prompt text**, the recommended image model, and whether a follow-up edit (face dedup / outfit / state) applies. This payload is what `seedance-shotlist-director` embeds in its HTML Asset Reference Prompts section; without it, that section is omitted.
 - Concept summary
 - Production phase
 - Reference asset request (what's still missing, what to build in Stage 1)
@@ -141,6 +140,6 @@ Return:
 - Continuity locks (which `@tag`s must never drift)
 - Safety/rights notes if relevant
 - Deliverables if known (expert mode)
-- **Next step: hand off to `seedance-shotlist-director`** to generate the HTML shotlist
+- **Next step: hand off to `seedance-shotlist-director`** — pass the brief, the directorial voice, the per-scene setup, the `@tag` element list, AND (when Stage 1 ran) the full asset reference prompt payload above. The director builds the HTML shotlist with `@tag` binding in every prompt and renders the Asset Reference Prompts section only when that payload is present.
 
 Do not ask a long questionnaire when the user already supplied enough information to write the brief. Do not generate the HTML shotlist in this skill — that is the director's job. This skill stops at the brief + element list and routes forward.
