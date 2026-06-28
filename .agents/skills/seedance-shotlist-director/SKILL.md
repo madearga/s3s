@@ -56,9 +56,19 @@ The HTML must be **self-contained** (inline CSS, inline JS), no external depende
 
 ## The Style Prefix
 
-**Always check the conversation first** — if the user uploaded or pasted a custom style prefix, use that exact one verbatim.
+The Style Prefix locks the global look of the whole film — lens, light, color, acting, physics, audio. It appears **once** at the top of the HTML in a collapsible block, AND is prepended verbatim to every prompt's copy-block, so the user copies a single prompt to Seedance and it works standalone — no reassembly needed.
 
-If no custom prefix is provided, use this default:
+### Selection order (check in this order)
+
+1. **Custom prefix pasted by the user** → use it verbatim. Never alter a user-supplied prefix.
+2. **Genre/feeling signal from the interview** → pick the matching preset below.
+3. **No signal** → fall back to the **Cinematic photoreal** default.
+
+### Style Prefix presets
+
+Pick the preset that matches the film's genre and the feeling the user chose. Each preset is a complete, copy-ready block — drop it in verbatim as the Style Prefix. Adapt individual lines (e.g. aspect ratio, specific light source) only when the user asks; do not silently merge presets.
+
+#### 1. Cinematic photoreal (default — drama, film, narrative)
 
 ```
 Style: 8K IMAX. Photorealistic — no 3D render, no game engine.
@@ -74,7 +84,112 @@ Technical: 24fps smooth motion. 8K detail. No jitter.
 Audio: Environmental SFX only. No music. No subtitles.
 ```
 
-The Style Prefix appears **once** at the top of the HTML in a collapsible block, AND is prepended verbatim to every prompt's copy-block. The user copies a single prompt to Seedance and it works standalone — no reassembly needed.
+#### 2. Commercial / product ad (polished, hero light)
+
+Use when the film is a product ad, brand spot, or any hero-the-product piece. Soft even daylight, no contre-jour, polished — the opposite of the cinematic default's shadow-side mood.
+
+```
+Style: 8K IMAX commercial, 16:9 widescreen. Photorealistic — no 3D render, no game engine.
+Lighting: Natural light only — soft, even morning daylight, gentle atmospheric haze throughout. Key light from sky and windows/garden doors only. No contre-jour, no rim backlight, no forced shadow-side framing. No artificial lightning. Subject lit softly and evenly from the camera side.
+Color: 60:30:10 — dominant / secondary / accent.
+Camera: Physical cine lens. 180° shutter motion blur.
+Skin: Pore-level realism — vellus hair, asymmetric moles, capillary flush, pore-shadow matching on-set light.
+Acting: Hollywood — micro-pauses before reactions, precise eye-line, living eyes with catch-lights, chest rise from breathing. Characters are always in motion, always reacting.
+Physics: Gravity and inertia respected — mass has real weight, correct contact shadows. No floating props.
+Composition: Rule of thirds + golden ratio. Every person moving from frame one.
+Continuity: Characters, props, product, environment identical across every cut. No identity drift.
+Technical: 24fps smooth motion. 8K detail. No jitter.
+Audio: Diegetic dialogue and environmental SFX only. No music. No subtitles.
+```
+
+#### 3. UGC / phone (TikTok, Reels, raw lifestyle)
+
+Use for vertical short-form, first-person or handheld phone feel, raw lifestyle, influencer UGC.
+
+```
+Style: Smartphone UGC, 9:16 vertical. Photorealistic — shot on a phone, not a cinema camera.
+Lighting: Available light only — whatever the room or sky gives. No staged cinema lighting. Slight exposure wobble acceptable.
+Color: Natural phone color science — slightly punchy, mild contrast, no film grade.
+Camera: Phone primary lens, ~24mm equivalent. Electronic rolling shutter, slight motion blur on fast pans. Occasional micro-jitter, handheld breathing. Auto-focus hunts allowed.
+Skin: Real skin — visible texture, no pore-perfecting. Phone-grade detail.
+Acting: Natural, unrehearsed — real reactions, glances at camera allowed, talking-to-camera allowed. People may be awkward, that's the point.
+Physics: Real-world physics. Handheld wobble respected.
+Composition: Centered subject (phone habit), rule of thirds optional. Subject often close to lens.
+Continuity: Same person, same outfit, same room across cuts — but minor continuity slips are acceptable (it's UGC).
+Technical: 30fps phone capture. 1080p–4K detail. Mild phone grain in low light.
+Audio: Real room tone, ambient SFX, on-camera dialogue. No music unless the user adds it. Optional on-screen captions.
+```
+
+#### 4. Anime / animation (2D cel or stylized 3D)
+
+Use for any animated film — 2D cel, modern anime, stylized 3D. Swap the `Look:` line for the exact sub-style.
+
+```
+Style: 2D cel animation (modern anime look). Not photoreal, not 3D render. Hand-drawn feel, flat colors with soft cel shading, clean line art.
+Lighting: Painted lighting — soft directional cel shading, one key direction, minimal ambient. No physical light simulation.
+Color: Saturated, limited palette — 3–4 hero colors, flat fills, soft gradients for sky/depth.
+Camera: Simulated 2D camera — pans, tilts, slow push-ins. Limited motion blur (smear frames on fast action). No physical lens artifacts.
+Skin: Stylized — clean cel shading, no pores. Subtle blush, simple shadow shapes.
+Acting: Anime — held expressions, snappy timing, deliberate poses, reaction frames. Exaggerated emotion beats.
+Physics: Stylized physics — weight suggested, not simulated. Smear frames on impact. Allowed stretch/squash on fast motion.
+Composition: Classic anime framing — centered heroes, dramatic close-ups, wide establishing pans.
+Continuity: Same character design, same colors, same proportions across every cut. No design drift.
+Technical: 24fps animation (on 2s or 3s acceptable). Clean line art. No jitter.
+Audio: Diegetic SFX + score. Optional subtitles.
+```
+
+For stylized 3D animation, swap the `Style:` and `Look:` lines to: `Style: Stylized 3D animation. Not photoreal. Soft-shaded 3D render with hand-painted textures.` and keep the rest.
+
+#### 5. Documentary (naturalistic, handheld, real)
+
+Use for documentary, reality, reportage, anything that should feel observed rather than staged.
+
+```
+Style: Documentary cinema, 16:9. Photorealistic — observational, not staged.
+Lighting: Available light only — windows, lamps, whatever's there. No added cinema lighting. Real mixed color temperatures allowed.
+Color: Naturalistic grade — flat, low-contrast, true-to-life. No stylized LUT.
+Camera: Handheld or shoulder-mount, ~35–50mm. Real micro-movement, occasional reframes. Available-shutter motion blur.
+Skin: Real skin — visible texture, real imperfections, no glamor.
+Acting: Subjects are real people — unscripted reactions, no performance direction. The camera observes, does not direct.
+Physics: Real-world physics. Natural contact shadows.
+Composition: Observational framing — rule of thirds when it fits, but real moments over perfect composition.
+Continuity: Reality continuity — same people, same place, same time of day. Do not fabricate continuity that wasn't there.
+Technical: 24fps. Clean detail. Handheld jitter is part of the look, not a defect.
+Audio: Real ambient sound, on-location dialogue, natural room tone. No score. No subtitles unless translating.
+```
+
+#### 6. Music video (mood-driven, beat-ready, stylized)
+
+Use for music videos, beat-driven promos, any film where the cut is on the beat and the look is the star.
+
+```
+Style: Music video cinema, 16:9 (or 2.39:1 widescreen). Photorealistic with a stylized grade.
+Lighting: Mood-driven — neon, gels, haze, practicals, hard keys, deep shadows. Mixed color temperatures encouraged. Light as production design.
+Color: Stylized grade — strong palette, deliberate contrast, halation on highlights, pushed saturation.
+Camera: Cine lens, anamorphic option. Flares, streaks, shallow depth of field. Motion blur tuned to the beat (faster cuts = cleaner frames).
+Skin: Glammed but real — pore detail under stylized light.
+Acting: Performer-driven — choreographed, hitting marks on the beat, playing to camera. Lip-sync allowed.
+Physics: Real physics, but motion timed to rhythm.
+Composition: Hero framing — performer center, dynamic angles, beat-synced reframes.
+Continuity: Wardrobe + key props locked across cuts; light/color may shift per beat by design.
+Technical: 24fps (or speed-ramped). 8K detail. No jitter.
+Audio: Music-led — diegetic SFX under the track. Score is the spine. Optional subtitles for lyrics.
+```
+
+### Picking the preset from the interview signals
+
+Map the interview's genre path + chosen feeling to a preset:
+
+| Genre path | Default preset |
+|---|---|
+| Drama, narrative, emotional | Cinematic photoreal |
+| Product ad, commercial, brand spot, e-commerce | Commercial / product ad |
+| UGC, lifestyle, influencer, TikTok/Reels | UGC / phone |
+| Animation, anime, cartoon | Anime / animation |
+| Documentary, reality, reportage | Documentary |
+| Music video, promo, beat-driven | Music video |
+
+When the feeling conflicts with the genre (e.g. a product ad that should feel "tense"), prefer the **genre** preset for the look and let the feeling shape the **acting/light mood inside the prompts** rather than swapping the whole prefix.
 
 ---
 

@@ -110,7 +110,7 @@ After one round of answers — or zero rounds, if the idea is already rich — s
 1. **Mini-treatment:** two or three plain sentences describing the finished video exactly as a viewer would see it. No production vocabulary.
 2. **Assumptions made**, each with a one-word switch: `I assumed warm late-afternoon light — say "night" and I'll relight it.`
 3. **Element list:** the named `@tag` references collected so far (or "none yet — we'll build them in Stage 1").
-4. **Production brief** beneath, in full director language: directorial voice, per-scene intention + coherent setup (camera, light, blocking, performance, sound), core scene, mood, continuity locks, aspect ratio, audio intent.
+4. **Production brief** beneath, in full director language: directorial voice, per-scene intention + coherent setup (camera, light, blocking, performance, sound), core scene, mood, continuity locks, aspect ratio, audio intent, **and the chosen Style Prefix preset name** (cinematic photoreal / commercial / UGC phone / anime / documentary / music video) so the director uses it instead of the default.
 
 Reacting to a draft is easier than answering questions: a non-expert says "yes, but slower" far more readily than they specify pacing. Treat their reaction as the second interview round. Adjust the mini-treatment and brief in place; never re-ask what they already answered.
 
@@ -119,6 +119,7 @@ Reacting to a draft is easier than answering questions: a non-expert says "yes, 
 1. **Build a safe draft premise immediately** from the user input — never make them start from a blank page.
 2. **Run the priority question pool in one batch**, skipping every question the idea already answers. Max 5 questions.
 3. **Identify the genre path:** product, lifestyle, drama, music video, landscape, commercial, animation, UGC, or experimental. Derive one directorial voice from that path plus the chosen feeling, reference look, and surface. Run the Director's Read on each scene to fix its intention and coherent setup.
+4. **Pick a Style Prefix preset** from `seedance-shotlist-director`'s preset library based on the genre path (cinematic photoreal / commercial / UGC phone / anime / documentary / music video). Note the chosen preset in the brief so the director uses it instead of the default. The user can override by pasting a custom prefix — honor that verbatim.
 4. **If the user is a filmmaker/agency/producer/editor/client-review owner:** collect deliverables, territory, aspect ratio, approval owner, rights, and post/delivery needs.
 5. **If real material exists or continuity locks require references:** run Asset Intake in a separate batch. Map each attached image to a `@tag`. If nothing exists yet and the user wants locked references, run Stage 1 (the make-* skills) to build the sheets first **before** step 7.
 6. **Propose** the mini-treatment + switchable assumptions + element list + production brief. Adjust on reaction (round 2).
