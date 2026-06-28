@@ -11,12 +11,13 @@ This is **cinema, not a clip**. You are not chopping a script into beats — you
 
 ---
 
-## Intake: two entry paths
+## Intake: three entry paths
 
-This skill accepts input from two paths:
+This skill accepts input from three paths:
 
 1. **Direct path** — the user arrives with a finished script, scene breakdown, or treatment. Skip the interview, read it as a director, build the shotlist.
 2. **Interview path** — `seedance-shotlist-interview` already ran and produced: a mini-treatment, switchable assumptions, a production brief with directorial voice + per-scene setup, and an element list of `@tag` image references. Receive that hand-off, do not re-interview, and build the shotlist from the brief. The `@tag` element list is binding — every named asset (`@hero`, `@kitchen`, `@headphones`) must appear in the Characters/Scene/CUT lines exactly as named, so the user's Seedance/Higgsfield Elements panel auto-attaches the right image per prompt.
+3. **Asset-built path** — `seedance-make-character`, `seedance-make-location`, and/or `seedance-make-prop` already ran and produced reference-sheet prompts + `@tag` element list. Receive both: (a) the `@tag` element list to bind into Characters/Scene/CUT lines, AND (b) the **reference prompt text itself** (verbatim) to embed in the HTML's **Asset Reference Prompts** section at the top of the document. The user then has one HTML file that covers the whole production: build the assets first (top section), then shoot the film (scenes below).
 
 If the user arrives with a vague idea and no script, route them to `seedance-shotlist-interview` first — do not build the shotlist from a thin premise.
 
@@ -290,6 +291,22 @@ Use this as the HTML skeleton — fill in `{{PROJECT_TITLE}}`, `{{STYLE_PREFIX_T
     font-size: 12.5px; color: var(--text-dim);
     font-family: "SF Mono", Menlo, Consolas, monospace;
   }
+  details.asset-refs {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+  }
+  details.asset-refs summary {
+    cursor: pointer; font-weight: 600;
+    color: var(--accent); user-select: none;
+  }
+  details.asset-refs .asset-note {
+    margin: 10px 0 4px; font-size: 12px; color: var(--text-dim);
+    font-family: inherit;
+  }
+  .asset-refs .prompt-block { margin-top: 14px; }
   .scene {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -358,6 +375,8 @@ Use this as the HTML skeleton — fill in `{{PROJECT_TITLE}}`, `{{STYLE_PREFIX_T
     Click the Copy button on any prompt to grab the full text (Style Prefix + Characters + Scene + Cuts).
     Want changes? Tell Claude what to revise and the file updates.
   </div>
+
+  {{ASSET_REFERENCE_PROMPTS_BLOCK}}
 
   <details class="style-prefix">
     <summary>Global Style Prefix (applied to every prompt)</summary>
@@ -458,6 +477,55 @@ If the shotlist is prose-only (no `@tag` references), render the empty-state blo
 </details>
 ```
 
+### Asset Reference Prompts block (`{{ASSET_REFERENCE_PROMPTS_BLOCK}}`) — CONDITIONAL
+
+This block is **conditional**: render it ONLY when the hand-off from `seedance-make-character` / `seedance-make-location` / `seedance-make-prop` includes reference-sheet prompt text. If no reference prompts were provided (direct path with no assets, or prose-only interview with no asset build), **omit this block entirely** — do not render an empty-state, do not render the wrapper. The section simply does not appear in the HTML.
+
+When reference prompts ARE present, render a collapsible block between the howto note and the Style Prefix. It groups every asset-building prompt the user runs first (in the recommended image model) to lock each character / location / product / prop into a `@tag` sheet, before they shoot the scenes below. Each prompt has a Copy button. Reuse the existing `.prompt-block` / `.copy-btn` / `pre.prompt` styles so the copy + localStorage JS already handles them — no new JS needed.
+
+```html
+<details class="asset-refs" open>
+  <summary>Asset Reference Prompts (build these first, then shoot the scenes)</summary>
+  <div class="asset-note">Run each prompt in the recommended image model (see each make-* skill). Attach the result in your Seedance/Higgsfield Elements panel using the exact @tag name, so the scene prompts below auto-attach it.</div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">
+      <span>@hero — character sheet · Soul Cinema / Nano Banana</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre class="prompt">[Cinematic character reference sheet ...full prompt text verbatim...]</pre>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">
+      <span>@hero — face dedup edit · GPT Image 2</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre class="prompt">Erase the face from the full-body shot on the right panel.</pre>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">
+      <span>@kitchen — location · Cinematic Locations / Nano Banana</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre class="prompt">[A cinematic wide establishing shot ...full prompt text verbatim...]</pre>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">
+      <span>@product — product sheet · GPT Image 2</span>
+      <button class="copy-btn">Copy</button>
+    </div>
+    <pre class="prompt">[Make a product sheet with front and 3/4 perspective views...]</pre>
+  </div>
+</details>
+```
+
+Each `.prompt-block` label shows the `@tag`, the asset type, and the recommended model (so the user knows which tool to paste it into). The `open` attribute on `<details>` makes the section expanded by default — assets come first in the production flow.
+
+The existing copy-button JS at the bottom of the template already selects every `.copy-btn` on the page, so it picks up the asset-refs blocks automatically with no extra script.
+
 ---
 
 ## A worked example (so you see what good looks like)
@@ -500,4 +568,5 @@ Notice: the script gave you 28 words. The prompt is detailed because the **direc
 - **Continuity tracker, character anchors, pacing notes are not visible blocks** — they live in your head and surface as concrete language inside the prompts.
 - **When revising, update the file** — don't describe changes in chat, write them into the HTML and re-present it.
 - **`@tag` mode vs prose mode** — pick one per shotlist, don't mix. In `@tag` mode, the same tag (`@hero`) recurs in every prompt of the same scene and the Elements list block lists every tag with its description. In prose mode, the Elements list block shows the empty-state line.
+- **Asset Reference Prompts block is conditional** — render it ONLY when reference-sheet prompts were handed off from `seedance-make-character` / `seedance-make-location` / `seedance-make-prop`. If no asset prompts were provided, omit the block entirely (no empty-state, no wrapper). The section simply doesn't appear.
 - **Interview hand-off** — when input comes from `seedance-shotlist-interview`, honor the directorial voice, per-scene setup, and `@tag` element list it produced. Do not re-interview. Build directly from the brief.
