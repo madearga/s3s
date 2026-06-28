@@ -33,13 +33,28 @@ Skip if the user already has a real photo of the actual place — attach it dire
 
 ## Recommended image model
 
-Locations are photoreal cinematic stills — use a model tuned for that, not a product-render model.
+Locations are photoreal cinematic stills. Match the model to the context the user is running in.
 
-| Asset | Best model (Higgsfield) | pi / opencode equivalent | Why |
-|---|---|---|---|
-| **Location still** (short or full establishing) | **Cinematic Locations** | **Nano Banana** = Gemini image (`comfyeditor_image_generate` provider `gemini`); alt Flux Pro (`replicate`/`wavespeed`), Seedream (`kie`) | Photoreal cinematic depth, natural light, atmospheric haze — what the camera needs |
+### In pi / opencode (no Cinematic Locations available)
 
-Rule of thumb: **generate every location in Cinematic Locations / Nano Banana.** GPT Image 2 can render a room but tends toward a clean studio look; locations need lived-in atmosphere and natural light, which the cinematic-image models handle better.
+| Asset | Primary tool | Alternative |
+|---|---|---|
+| **Location still** (short or full establishing) | **Nano Banana** — `comfyeditor_image_generate` provider `gemini` | GPT Image 2 — `codex_generate_image`; Flux Pro — `replicate`/`wavespeed`; Seedream — `kie` |
+
+Rule of thumb in pi/opencode: **generate every location in Nano Banana (`comfyeditor_image_generate` provider `gemini`).** GPT Image 2 can render a room but tends toward a clean studio look; locations need lived-in atmosphere and natural light, which Nano Banana handles better.
+
+### In Higgsfield (Cinematic Locations available)
+
+| Asset | Best model | Why |
+|---|---|---|
+| **Location still** | **Cinematic Locations** | Photoreal cinematic depth, natural light, atmospheric haze — what the camera needs |
+
+Rule of thumb in Higgsfield: **generate every location in Cinematic Locations.** GPT Image 2 tends toward a clean studio look; locations need lived-in atmosphere.
+
+### Detect the context
+
+- If the user mentions Higgsfield, Cinematic Locations, or is running inside the Higgsfield app → use the Higgsfield column.
+- Otherwise → use the pi/opencode column. **Default to pi/opencode** when unsure.
 
 If the user has a real photo of the actual place, skip generation — attach it with a `@tag`.
 

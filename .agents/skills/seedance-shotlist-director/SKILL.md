@@ -508,7 +508,7 @@ When reference prompts ARE present, render a collapsible block between the howto
 
   <div class="prompt-block">
     <div class="prompt-label">
-      <span>@hero — character sheet · Soul Cinema / Nano Banana</span>
+      <span>@hero — character sheet · GPT Image 2 (pi/opencode) or Soul Cinema (Higgsfield)</span>
       <button class="copy-btn">Copy</button>
     </div>
     <pre class="prompt">«paste the verbatim @hero character-sheet prompt here, HTML-escaped»</pre>
@@ -524,7 +524,7 @@ When reference prompts ARE present, render a collapsible block between the howto
 
   <div class="prompt-block">
     <div class="prompt-label">
-      <span>@kitchen — location · Cinematic Locations / Nano Banana</span>
+      <span>@kitchen — location · Nano Banana (pi/opencode) or Cinematic Locations (Higgsfield)</span>
       <button class="copy-btn">Copy</button>
     </div>
     <pre class="prompt">«paste the verbatim @kitchen location prompt here, HTML-escaped»</pre>
@@ -540,7 +540,7 @@ When reference prompts ARE present, render a collapsible block between the howto
 </details>
 ```
 
-Each `.prompt-block` label shows the `@tag`, the asset type, and the recommended model (so the user knows which tool to paste it into). The `open` attribute on `<details>` makes the section expanded by default — assets come first in the production flow. The `«...»` markers in the example above are fill slots for the agent — **the shipped HTML must contain only concrete, HTML-escaped prompt text, never the `«»` markers or `[...]` placeholders.**
+Each `.prompt-block` label shows the `@tag`, the asset type, and the recommended model (so the user knows which tool to paste it into). **Pick the model by context**: if the user is in pi/opencode, lead with the pi/opencode primary (GPT Image 2 for character sheets + products/props, Nano Banana for locations); if they're in Higgsfield, lead with the Higgsfield tool (Soul Cinema for characters, Cinematic Locations for locations, GPT Image 2 for products/props). The `open` attribute on `<details>` makes the section expanded by default — assets come first in the production flow. The `«...»` markers in the example above are fill slots for the agent — **the shipped HTML must contain only concrete, HTML-escaped prompt text, never the `«»` markers or `[...]` placeholders.**
 
 The existing copy-button JS at the bottom of the template already selects every `.copy-btn` on the page, so it picks up the asset-refs blocks automatically with no extra script.
 

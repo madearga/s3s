@@ -32,18 +32,36 @@ Skip if the user already has a real photo of the actual person — attach it dir
 
 ## Recommended image model
 
-Different image models are better at different things. Match the model to the asset, don't send everything to one tool.
+Different image models are better at different things. Match the model to the context the user is running in — don't assume Higgsfield.
 
-| Asset | Best model (Higgsfield) | pi / opencode equivalent | Why |
-|---|---|---|---|
-| **Character sheet** (the split-frame sheet itself) | **Soul Cinema** | **Nano Banana** = Gemini image (`comfyeditor_image_generate` provider `gemini`, or `codex_generate_image` for gpt-image-2) | Photoreal character stills, face + build lock |
-| **Face dedup edit** (erase duplicate face) | **GPT Image 2** | `codex_generate_image` (gpt-image-2) | Strongest at image edits / inpainting |
-| **Outfit variant edit** (swap wardrobe) | **GPT Image 2** | `codex_generate_image` | Edit adherence — keeps face, swaps only garment |
-| **State variant edit** (wet / sweaty / exhausted) | **GPT Image 2** | `codex_generate_image` | Edit adherence — keeps identity, applies state |
+### In pi / opencode (no Soul Cinema / Cinematic Locations available)
 
-Rule of thumb: **generate the base sheet in Soul Cinema / Nano Banana, then run every edit (dedup, outfit, state) in GPT Image 2.** The prompt text is the same across models — only the tool differs.
+The user's tools are `codex_generate_image` (GPT Image 2) and `comfyeditor_image_generate` (provider `gemini` = Nano Banana, plus `replicate`/`fal`/`wavespeed`/`kie` for Flux/Seedream). **GPT Image 2 (`codex_generate_image`) is the primary tool for everything here** — it does the base character sheet AND the edits well.
 
-If neither Higgsfield nor a vision-capable image tool is available, any strong photoreal model (Flux Pro via `replicate`/`wavespeed`, Seedream via `kie`) works for the base sheet, but edits will be weaker — prefer GPT Image 2 for edits wherever possible.
+| Asset | Primary tool | Alternative |
+|---|---|---|
+| **Character sheet** (the split-frame base sheet) | **GPT Image 2** — `codex_generate_image` | Nano Banana — `comfyeditor_image_generate` provider `gemini` |
+| **Face dedup edit** | **GPT Image 2** — `codex_generate_image` | (no good alternative — edits are GPT Image 2's strength) |
+| **Outfit variant edit** | **GPT Image 2** — `codex_generate_image` | Nano Banana |
+| **State variant edit** | **GPT Image 2** — `codex_generate_image` | Nano Banana |
+
+Rule of thumb in pi/opencode: **generate the base sheet AND every edit in GPT Image 2 (`codex_generate_image`).** Use Nano Banana only if you want a softer photoreal look on the base sheet. The prompt text is the same across models — only the tool differs.
+
+### In Higgsfield (Soul Cinema / Cinematic Locations available)
+
+| Asset | Best model | Why |
+|---|---|---|
+| **Character sheet** (base) | **Soul Cinema** | Photoreal character stills, face + build lock |
+| **Face dedup edit** | **GPT Image 2** | Strongest at image edits / inpainting |
+| **Outfit variant edit** | **GPT Image 2** | Edit adherence — keeps face, swaps only garment |
+| **State variant edit** | **GPT Image 2** | Edit adherence — keeps identity, applies state |
+
+Rule of thumb in Higgsfield: **generate the base sheet in Soul Cinema, then run every edit in GPT Image 2.**
+
+### Detect the context
+
+- If the user mentions Higgsfield, Soul Cinema, Cinematic Locations, or is running inside the Higgsfield app → use the Higgsfield column.
+- Otherwise (pi, opencode, standalone) → use the pi/opencode column. **Default to pi/opencode** when unsure — GPT Image 2 is always a safe choice for character sheets and edits.
 
 ## Output contract
 

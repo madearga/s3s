@@ -34,15 +34,32 @@ Skip if the user already has a real photo of the actual product/prop — attach 
 
 ## Recommended image model
 
-Products and props split by case — the model that's best depends on whether you have a source photo or are designing from scratch.
+Products and props split by case. GPT Image 2 is the primary tool in both pi/opencode and Higgsfield for product/prop sheets.
 
-| Case | Best model (Higgsfield) | pi / opencode equivalent | Why |
-|---|---|---|---|
-| **Case 1 — from a real source photo** (`@image_1`) | **GPT Image 2** | `codex_generate_image` (gpt-image-2) | Best at image-to-image: turns one photo into a clean multi-view sheet |
-| **Case 2 — original unbranded turnaround** | **GPT Image 2** | `codex_generate_image` | Strongest instruction adherence — respects "no branding", renders clean studio product sheets |
-| **Case 3 — simple single-view prop** | **GPT Image 2** or **Nano Banana** | `codex_generate_image` or `comfyeditor_image_generate` provider `gemini` | Either works for a single clean studio shot |
+### In pi / opencode
 
-Rule of thumb: **products and props go to GPT Image 2.** It handles both the from-photo sheet (case 1) and the original-design turnaround with strict no-branding (case 2) better than the cinematic models. Use Nano Banana only for case 3 when you want a softer photoreal look on a simple prop.
+| Case | Primary tool | Alternative |
+|---|---|---|
+| **Case 1 — from a real source photo** (`@image_1`) | **GPT Image 2** — `codex_generate_image` | Nano Banana — `comfyeditor_image_generate` provider `gemini` |
+| **Case 2 — original unbranded turnaround** | **GPT Image 2** — `codex_generate_image` | Nano Banana |
+| **Case 3 — simple single-view prop** | **GPT Image 2** — `codex_generate_image` or **Nano Banana** — `comfyeditor_image_generate` provider `gemini` | either works |
+
+Rule of thumb in pi/opencode: **products and props go to GPT Image 2 (`codex_generate_image`).** It handles both the from-photo sheet (case 1) and the original-design turnaround with strict no-branding (case 2) better than the cinematic models. Use Nano Banana only for case 3 when you want a softer photoreal look on a simple prop.
+
+### In Higgsfield
+
+| Case | Best model | Why |
+|---|---|---|
+| **Case 1 — from a real source photo** (`@image_1`) | **GPT Image 2** | Best at image-to-image: turns one photo into a clean multi-view sheet |
+| **Case 2 — original unbranded turnaround** | **GPT Image 2** | Strongest instruction adherence — respects "no branding", renders clean studio product sheets |
+| **Case 3 — simple single-view prop** | **GPT Image 2** or **Nano Banana** | Either works for a single clean studio shot |
+
+Rule of thumb in Higgsfield: **products and props go to GPT Image 2.** Use Nano Banana only for case 3 when you want a softer photoreal look.
+
+### Detect the context
+
+- If the user mentions Higgsfield or is running inside the Higgsfield app → use the Higgsfield section.
+- Otherwise → use the pi/opencode section. **Default to pi/opencode** when unsure.
 
 If the user already has a real photo of the actual product, case 1 (GPT Image 2) still helps by normalizing it into a clean sheet — but you can also attach the raw photo directly with a `@tag` and skip generation.
 
