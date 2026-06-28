@@ -555,7 +555,15 @@ This is a single scene — call it Scene 1. Honest beats: door opens, she crosse
 ```
 Style: 8K IMAX. Photorealistic — no 3D render, no game engine.
 Lighting: Natural light only — contre-jour backlight, camera on shadow side, atmospheric haze throughout. Key light from sky and windows only. No artificial lightning.
-[...full style prefix verbatim...]
+Color: 60:30:10 — dominant / secondary / accent.
+Camera: Physical cine lens. 180° shutter motion blur.
+Skin: Pore-level realism — vellus hair, asymmetric moles, capillary flush, pore-shadow matching on-set light.
+Acting: Hollywood — micro-pauses before reactions, precise eye-line, living eyes with catch-lights, chest rise from breathing. Characters never standing, always reacting.
+Physics: Gravity and inertia respected — mass has real weight, correct contact shadows. No floating props.
+Composition: Rule of thirds + golden ratio. Every person moving from frame one.
+Continuity: Characters, props, environment identical across every cut. No identity drift.
+Technical: 24fps smooth motion. 8K detail. No jitter.
+Audio: Environmental SFX only. No music. No subtitles.
 
 Characters:
 ANNA — late 20s, dark hair plastered to her forehead from the rain, soaked navy coat dripping onto the hardwood, mascara slightly smudged under her right eye, lips slightly parted from cold.

@@ -120,9 +120,12 @@ Reacting to a draft is easier than answering questions: a non-expert says "yes, 
 2. **Run the priority question pool in one batch**, skipping every question the idea already answers. Max 5 questions.
 3. **Identify the genre path:** product, lifestyle, drama, music video, landscape, commercial, animation, UGC, or experimental. Derive one directorial voice from that path plus the chosen feeling, reference look, and surface. Run the Director's Read on each scene to fix its intention and coherent setup.
 4. **If the user is a filmmaker/agency/producer/editor/client-review owner:** collect deliverables, territory, aspect ratio, approval owner, rights, and post/delivery needs.
-5. **If real material exists or continuity locks require references:** run Asset Intake in a separate batch. Map each attached image to a `@tag`. If nothing exists yet and the user wants locked references, run Stage 1 to build the sheets first.
+5. **If real material exists or continuity locks require references:** run Asset Intake in a separate batch. Map each attached image to a `@tag`. If nothing exists yet and the user wants locked references, run Stage 1 (the make-* skills) to build the sheets first **before** step 7.
 6. **Propose** the mini-treatment + switchable assumptions + element list + production brief. Adjust on reaction (round 2).
-7. **Hand off to `seedance-shotlist-director`** — pass the brief, the directorial voice, the per-scene setup, and the `@tag` element list. The director skill builds the HTML shotlist with `@tag` binding in every prompt.
+7. **Hand off — conditionally:**
+   - If Stage 1 did not run (user had real photos, or chose prose-only, or already built assets) → hand off to `seedance-shotlist-director` now with the brief, directorial voice, per-scene setup, `@tag` element list, and (when applicable) the asset reference prompt payload.
+   - If Stage 1 still needs to run (assets are missing and the user wants them) → hand off to `seedance-make-character` / `seedance-make-location` / `seedance-make-prop` first. They produce the reference prompts + `@tag` element list. Only after those return do you hand off to `seedance-shotlist-director` with the full payload. **Do not skip to director and dead-end the references-first flow.**
+   The director builds the HTML shotlist with `@tag` binding in every prompt and renders the Asset Reference Prompts section only when that payload is present.
 
 ## Output Contract
 
@@ -140,6 +143,8 @@ Return:
 - Continuity locks (which `@tag`s must never drift)
 - Safety/rights notes if relevant
 - Deliverables if known (expert mode)
-- **Next step: hand off to `seedance-shotlist-director`** — pass the brief, the directorial voice, the per-scene setup, the `@tag` element list, AND (when Stage 1 ran) the full asset reference prompt payload above. The director builds the HTML shotlist with `@tag` binding in every prompt and renders the Asset Reference Prompts section only when that payload is present.
+- **Next step — conditional hand-off:**
+  - If Stage 1 already ran (or wasn't needed) → hand off to `seedance-shotlist-director` with the brief, directorial voice, per-scene setup, `@tag` element list, and (when Stage 1 ran) the full asset reference prompt payload above. The director builds the HTML shotlist with `@tag` binding and renders the Asset Reference Prompts section only when that payload is present.
+  - If Stage 1 still needs to run (assets missing, user wants them) → hand off to the make-* skills FIRST, then to `seedance-shotlist-director` once they return. Do not dead-end the references-first flow by jumping straight to the director.
 
 Do not ask a long questionnaire when the user already supplied enough information to write the brief. Do not generate the HTML shotlist in this skill — that is the director's job. This skill stops at the brief + element list and routes forward.
