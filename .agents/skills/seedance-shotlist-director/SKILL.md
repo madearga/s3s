@@ -122,7 +122,7 @@ Audio: Real room tone, ambient SFX, on-camera dialogue. No music unless the user
 
 #### 4. Anime / animation (2D cel or stylized 3D)
 
-Use for any animated film — 2D cel, modern anime, stylized 3D. Swap the `Look:` line for the exact sub-style.
+Use for any animated film — 2D cel, modern anime, stylized 3D. Swap the first line (`Style:`) for the exact sub-style.
 
 ```
 Style: 2D cel animation (modern anime look). Not photoreal, not 3D render. Hand-drawn feel, flat colors with soft cel shading, clean line art.
@@ -138,7 +138,7 @@ Technical: 24fps animation (on 2s or 3s acceptable). Clean line art. No jitter.
 Audio: Diegetic SFX + score. Optional subtitles.
 ```
 
-For stylized 3D animation, swap the `Style:` and `Look:` lines to: `Style: Stylized 3D animation. Not photoreal. Soft-shaded 3D render with hand-painted textures.` and keep the rest.
+For stylized 3D animation, replace the first line with: `Style: Stylized 3D animation. Not photoreal. Soft-shaded 3D render with hand-painted textures.` and keep the rest.
 
 #### 5. Documentary (naturalistic, handheld, real)
 
