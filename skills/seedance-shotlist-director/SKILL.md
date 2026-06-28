@@ -1,6 +1,6 @@
 ---
 name: seedance-shotlist-director
-description: Generate a director's shotlist as an editable HTML document for Seedance 2.0 video production. Use this skill whenever the user provides a script, scene breakdown, story idea, or treatment and wants it turned into a numbered shotlist with English Seedance 2.0 prompts. Trigger on phrases like "make a shotlist", "режиссерский шотлист", "break this script into prompts", "generate prompts for Seedance", "shotlist for this scene", or any request to convert narrative content into shot-by-shot prompts. Also use when the user wants to update, revise, or extend an existing shotlist HTML — re-render the same document with their changes applied. Each prompt targets 15 seconds of screen time; longer scenes are split across multiple prompts under the same scene number. Output is always a single editable HTML file with checkboxes per scene, a global Style Prefix block, and CUT-separated shots inside each prompt.
+description: Generate a director's shotlist as an editable HTML document for Seedance 2.0 video production. Use this skill whenever the user provides a script, scene breakdown, story idea, or treatment and wants it turned into a numbered shotlist with English Seedance 2.0 prompts. Trigger on phrases like "make a shotlist", "режиссерский шотлист", "break this script into prompts", "generate prompts for Seedance", "shotlist for this scene", or any request to convert narrative content into shot-by-shot prompts. Also use when the user wants to update, revise, or extend an existing shotlist HTML — re-render the same document with their changes applied. Also use as the SECOND stage after `seedance-shotlist-interview` — when a brief, directorial voice, per-scene setup, and @tag element list have already been produced by the interview skill, build the HTML shotlist from them here. Each prompt targets 15 seconds of screen time; longer scenes are split across multiple prompts under the same scene number. Output is always a single editable HTML file with checkboxes per scene, a global Style Prefix block, an optional Elements list of @tag image references, and CUT-separated shots inside each prompt.
 ---
 
 # Seedance 2.0 Shotlist Director
@@ -8,6 +8,32 @@ description: Generate a director's shotlist as an editable HTML document for See
 You are a top-tier film director and cinematographer turning scripts into Seedance 2.0 shot-by-shot prompts. The output is a single editable HTML shotlist that the user can open in their browser, tick off scenes as they shoot, and come back to you for revisions.
 
 This is **cinema, not a clip**. You are not chopping a script into beats — you are blocking, lighting, and pacing a film.
+
+---
+
+## Intake: two entry paths
+
+This skill accepts input from two paths:
+
+1. **Direct path** — the user arrives with a finished script, scene breakdown, or treatment. Skip the interview, read it as a director, build the shotlist.
+2. **Interview path** — `seedance-shotlist-interview` already ran and produced: a mini-treatment, switchable assumptions, a production brief with directorial voice + per-scene setup, and an element list of `@tag` image references. Receive that hand-off, do not re-interview, and build the shotlist from the brief. The `@tag` element list is binding — every named asset (`@hero`, `@kitchen`, `@headphones`) must appear in the Characters/Scene/CUT lines exactly as named, so the user's Seedance/Higgsfield Elements panel auto-attaches the right image per prompt.
+
+If the user arrives with a vague idea and no script, route them to `seedance-shotlist-interview` first — do not build the shotlist from a thin premise.
+
+---
+
+## @tag image reference binding
+
+When an element list of `@tag` references is provided (either from the interview hand-off or attached directly by the user), bind them into the prompt text:
+
+- In the **Characters** block, name the tag inline: `HERO (@hero) — lean man, late 20s, reddish-brown curly hair...`
+- In the **Scene** line, tag locations and props: `A sage-green country kitchen (@kitchen), early morning... the cream headphones (@headphones) rest on the counter to the right of the gas range...`
+- In **CUT** lines, tag any prop/location the beat touches: `Hero picks up the cream headphones (@headphones) from the counter...`
+- Continuity carries the `@tag` forward across every prompt in the same scene — `(@hero)` appears in 1a, 1b, 1c identically.
+
+If no `@tag` list is provided, fall back to prose-only character anchors (the original behavior). Prose mode and `@tag` mode are mutually exclusive per shotlist — do not mix.
+
+The `@tag` names must match exactly what the user names in their Seedance/Higgsfield Elements panel. That match is what auto-attaches images at generate time.
 
 ---
 
@@ -231,6 +257,39 @@ Use this as the HTML skeleton — fill in `{{PROJECT_TITLE}}`, `{{STYLE_PREFIX_T
     white-space: pre-wrap;
     color: var(--text);
   }
+  details.elements-list {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+  }
+  details.elements-list summary {
+    cursor: pointer; font-weight: 600;
+    color: var(--accent); user-select: none;
+  }
+  .elements-list ul {
+    margin: 14px 0 0; padding: 0 0 0 18px;
+    list-style: none;
+  }
+  .elements-list li {
+    padding: 6px 0;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  .elements-list li:last-child { border-bottom: none; }
+  .elements-list .tag {
+    color: var(--accent); font-weight: 600;
+    margin-right: 8px;
+  }
+  .elements-empty {
+    margin: 14px 0 0; padding: 12px;
+    background: var(--panel-2); border-radius: 6px;
+    font-size: 12.5px; color: var(--text-dim);
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
   .scene {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -305,6 +364,8 @@ Use this as the HTML skeleton — fill in `{{PROJECT_TITLE}}`, `{{STYLE_PREFIX_T
     <pre>{{STYLE_PREFIX_TEXT}}</pre>
   </details>
 
+  {{ELEMENTS_LIST_BLOCK}}
+
   {{SCENES_HTML}}
 </div>
 
@@ -372,6 +433,31 @@ Each scene block in `{{SCENES_HTML}}` follows this pattern:
 
 The `data-scene` attribute on the checkbox uses the scene number as a string. If a scene is split across multiple prompts (3a, 3b, 3c), there is still **one checkbox for the whole scene** — the user ticks scene 3 when all of 3a/3b/3c are shot.
 
+### Elements list block (`{{ELEMENTS_LIST_BLOCK}}`)
+
+If the shotlist uses `@tag` image references, render a collapsible Elements list between the Style Prefix and the scenes so the user has a single source of truth for what each `@tag` maps to. The tag names here must match the user's Seedance/Higgsfield Elements panel exactly.
+
+```html
+<details class="elements-list">
+  <summary>Elements (@tag image references)</summary>
+  <ul>
+    <li><span class="tag">@hero</span> main character — lean man, late 20s, curly auburn hair</li>
+    <li><span class="tag">@headphones</span> product — cream over-ear ANC, tan leather cushions, orange accent ring</li>
+    <li><span class="tag">@kitchen</span> location — sage-green country kitchen, 3/4 angle</li>
+    <li><span class="tag">@sneakers</span> prop — cream/orange running shoes, turnaround sheet</li>
+  </ul>
+</details>
+```
+
+If the shotlist is prose-only (no `@tag` references), render the empty-state block instead so the user knows the mode is active:
+
+```html
+<details class="elements-list">
+  <summary>Elements (@tag image references)</summary>
+  <div class="elements-empty">Prose-only mode — no @tag image references. Describe characters and props in the prompt text directly.</div>
+</details>
+```
+
 ---
 
 ## A worked example (so you see what good looks like)
@@ -413,3 +499,5 @@ Notice: the script gave you 28 words. The prompt is detailed because the **direc
 - **One scene = one checkbox**, even if split across multiple prompts.
 - **Continuity tracker, character anchors, pacing notes are not visible blocks** — they live in your head and surface as concrete language inside the prompts.
 - **When revising, update the file** — don't describe changes in chat, write them into the HTML and re-present it.
+- **`@tag` mode vs prose mode** — pick one per shotlist, don't mix. In `@tag` mode, the same tag (`@hero`) recurs in every prompt of the same scene and the Elements list block lists every tag with its description. In prose mode, the Elements list block shows the empty-state line.
+- **Interview hand-off** — when input comes from `seedance-shotlist-interview`, honor the directorial voice, per-scene setup, and `@tag` element list it produced. Do not re-interview. Build directly from the brief.
