@@ -1,0 +1,10 @@
+{
+  "name": "s3s",
+  "version": "1.1.0",
+  "description": "Seedance 2.0 shotlist workflow — creative interview + HTML shotlist director with @tag image reference binding.",
+  "keywords": ["pi-package", "seedance", "shotlist", "video", "director"],
+  "pi": {
+    "skills": ["./skills"],
+    "prompts": ["./prompts"]
+  }
+}
