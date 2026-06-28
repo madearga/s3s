@@ -85,30 +85,52 @@ The sheet structure is constant; adapt the **descriptive content**:
 | Documentary | Real subjects; prefer real photos over generated sheets |
 | Music video | Performer + dancers; wardrobe + state variants per beat |
 
+## Output format for every GPT Image 2 prompt
+
+When generating a GPT Image 2 prompt, deliver it in this order:
+
+1. **Director's read** — one sentence on what the image must achieve.
+2. **Prompt strategy** — which sheet type this is (base / face-dedup / outfit / state / side character / extended) and why.
+3. **Final GPT Image 2 prompt** — English, ready to paste. Follow the structure below.
+4. **Text accuracy notes** — flag any text that must render correctly (badges, labels, signage). Most character sheets have none.
+5. **Iteration suggestions** — 2–3 follow-up edits the user can try in the same conversation (e.g. "make the hair lighter", "add a visible scar on the left cheek", "change the background to pure white").
+
+GPT Image 2 is reasoning-aware: it understands layered natural-language instructions. Write full sentences with a clear hierarchy. **Do not use keyword-list filler** like "8K, masterpiece, ultra-realistic, stunning". Put the most important details in the first ~50 words.
+
+---
+
 ## The character sheet template
 
 Fill `[age/ethnicity/build]`, `[hair]`, `[facial features]`, `[outfit]`, `[build]`:
 
 ```
-Cinematic character reference sheet, split-frame layout, photorealistic.
+Cinematic character reference sheet, split-frame layout, photorealistic, clean solid grey studio background.
 
 Left panel — facial close-up: [age/ethnicity/build], [hair description], the entire head fully inside the frame including all the hair, nothing cropped, real skin texture with subtle pores, [distinguishing facial features — freckles, scars, moles, glasses, none], calm neutral expression, looking straight into lens. Shot on 85mm portrait lens, shallow depth of field, soft cinematic key light with gentle fill.
 
 Right panel — full-body front and back views side by side: the same [age/ethnicity/build] shown twice within this panel — on the left, a full-body front view facing the camera; on the right, a full-body back view photographed from directly behind. In both, they stand straight in a normal relaxed pose, arms hanging down at their sides, full height in frame head-to-toe, [build], same [outfit description]. The front view shows the face and the front of the garment; the back view shows the back of the head, hair, shoulders, garment seams and the rear of the pants and shoes. Both figures matched in framing, scale and lighting for consistency. Shot on 35mm lens, even full-length lighting.
 
-Look: clean studio character sheet, plain solid grey background, consistent character across all views, soft diffused cinematic lighting, muted natural color grade, fine detail, true-to-life skin tones, vertical divider lines separating each view.
+Look: clean studio character sheet, plain solid grey background, consistent character across all views, soft diffused cinematic lighting, muted natural color grade, fine detail, true-to-life skin tones, vertical divider lines separating each view. Aspect ratio 16:9.
 ```
 
 Example — **drama** (`@hero`, surgeon):
 
 ```
-Cinematic character reference sheet, split-frame layout, photorealistic.
+Cinematic character reference sheet, split-frame layout, photorealistic, clean solid grey studio background.
 
 Left panel — facial close-up: a woman in her early 30s, Filipino, dark hair pulled into a loose bun escaping in strands, the entire head fully inside the frame including all the hair, nothing cropped, real skin texture with subtle pores, dark circles under her eyes, dry lips, no makeup, calm neutral exhausted expression, looking straight into lens. Shot on 85mm portrait lens, shallow depth of field, soft cinematic key light with gentle fill.
 
-Right panel — full-body front and back views side by side: the same woman shown twice within this panel — on the left, a full-body front view facing the camera; on the right, a full-body back view photographed from directly behind. In both, she stands straight in a normal relaxed pose, arms hanging down at her sides, full height in frame head-to-toe, slim build, same outfit — pale blue surgical scrubs creased and faintly stained at the cuff, a hospital lanyard around her neck, dark sneakers. The front view shows her face and the front of the garment; the back view shows the back of her head, hair, shoulders, garment seams and the rear of the pants and shoes. Both figures matched in framing, scale and lighting for consistency. Shot on 35mm lens, even full-length lighting.
+Right panel — full-body front and back views side by side: the same woman shown twice within this panel — on the left, a full-body front view facing the camera; on the right, a full-body back view photographed from directly behind. In both, she stands straight in a normal relaxed pose, arms hanging down at their sides, full height in frame head-to-toe, slim build, same outfit — pale blue surgical scrubs creased and faintly stained at the cuff, a hospital lanyard around her neck, dark sneakers. The front view shows her face and the front of the garment; the back view shows the back of her head, hair, shoulders, garment seams and the rear of the pants and shoes. Both figures matched in framing, scale and lighting for consistency. Shot on 35mm lens, even full-length lighting.
 
-Look: clean studio character sheet, plain solid grey background, consistent character across all views, soft diffused cinematic lighting, muted natural color grade, fine detail, true-to-life skin tones, vertical divider lines separating each view.
+Look: clean studio character sheet, plain solid grey background, consistent character across all views, soft diffused cinematic lighting, muted natural color grade, fine detail, true-to-life skin tones, vertical divider lines separating each view. Aspect ratio 16:9.
+```
+
+## Extended reference sheet (optional — when the user needs more than base front/back)
+
+Add expression states, a color palette swatch row, and close-up detail breakdowns when the character will be seen in tight shots or needs palette locks:
+
+```
+Same [age/ethnicity/build] character reference sheet expanded into an organized grid on a clean white background. Include: a neutral facial close-up; expression variations showing calm, smiling, concerned, and tired; a three-view turnaround showing front, side, and back; detailed costume breakdown (upper body, lower body, footwear, accessories); and a color palette swatch row with the dominant garment and accent colors labeled. Consistent character across every cell, soft even studio lighting, true-to-life skin tones. Aspect ratio 16:9.
 ```
 
 ## Face dedup edit (run if the full-body panel shows a second face)
@@ -124,7 +146,7 @@ The sheet has more than one face in frame, which makes the video model drift. Th
 When the character changes wardrobe for a specific scene:
 
 ```
-Edit this character sheet so the same person is wearing [outfit description — e.g. a blue athletic kit with running shoes / a charcoal formal suit with a white shirt], keeping the face, hair, and identity exactly consistent across all panels.
+Edit this character sheet so the same person is wearing [outfit description — e.g. a blue athletic kit with running shoes / a charcoal formal suit with a white shirt], keeping the face, hair, and identity exactly consistent across all panels. Aspect ratio 16:9.
 ```
 
 ## State variant (`@s_hero_wet`, `@s_hero_exhausted` — same character, mid-film state change)
@@ -132,7 +154,7 @@ Edit this character sheet so the same person is wearing [outfit description — 
 When a character changes state on screen (dry → drenched, calm → bloodied, rested → exhausted), bake the state into its own locked reference:
 
 ```
-same character sheet, [state description — e.g. post-run, sweaty chest, sweat stains on the shirt / soaked from the rain, water dripping from hair and clothes / post-shift, scrubs more creased, hair looser, no lanyard, barefoot on tile].
+same character sheet, [state description — e.g. post-run, sweaty chest, sweat stains on the shirt / soaked from the rain, water dripping from hair and clothes / post-shift, scrubs more creased, hair looser, no lanyard, barefoot on tile]. Aspect ratio 16:9.
 ```
 
 ## Side character (`@boss`, `@neighbour`, `@child`)

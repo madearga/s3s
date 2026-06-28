@@ -84,12 +84,32 @@ The sheet structure is constant; adapt the **object and detail**:
 | Documentary | Real belongings, photographed — prefer real photos |
 | Music video | Instruments, mics, props that recur across beats |
 
+## Output format for every GPT Image 2 prompt
+
+Deliver product/prop prompts in this order:
+
+1. **Director's read** — one sentence on what the image must achieve.
+2. **Prompt strategy** — which case applies (from-source-photo / original-design / simple-prop) and why.
+3. **Final GPT Image 2 prompt** — English, ready to paste.
+4. **Text accuracy notes** — flag any on-product text (model numbers, labels, engraved words) that must render correctly.
+5. **Iteration suggestions** — 2–3 follow-up edits the user can try in the same conversation.
+
+GPT Image 2 is reasoning-aware: use full sentences and clear hierarchies, not keyword chains. **Do not use filler** like "8K, masterpiece, ultra-realistic". Front-load the most important details in the first ~50 words. Always end the prompt with `Aspect ratio [x:x].`
+
+---
+
 ## Case 1 — Product sheet from a real source photo
 
 Drop the user's product image in as `@image_1`:
 
 ```
-Make a product sheet with front and 3/4 perspective views of [product type] from @image_1.
+Product reference sheet from @image_1, front view and 3/4 hero angle of a single [product type].
+
+LAYOUT: two views on a flat neutral light-gray studio background — front view on the left, 3/4 perspective on the right. Consistent scale, even spacing, soft contact shadow under each, soft even studio product lighting.
+
+SUBJECT: [detailed physical description: shape, material, color, finish, distinctive features].
+
+LOOK: photorealistic product photography, accurate materials, true-to-life color, clean seamless light-gray background. No additional props, no clutter. Aspect ratio 16:9.
 ```
 
 ## Case 2 — Original unbranded design (orthographic turnaround)
@@ -105,7 +125,7 @@ DESIGN — [detailed design description: materials, colors, silhouette, signatur
 
 STRICTLY NO branding: no brand names, logos, swooshes, stripe-logos, wordmarks, text, trademarks, or brand-resembling motifs anywhere. Fully original and unbranded.
 
-STYLE: photorealistic product render, ultra sharp detail, accurate materials, true-to-life color, soft cinematic studio lighting, flat light-gray seamless background, product design presentation board.
+LOOK: photorealistic product render, accurate materials, true-to-life color, soft cinematic studio lighting, flat light-gray seamless background, product design presentation board. Aspect ratio 16:9.
 ```
 
 Example — **lifestyle** (`@watch`, original wristwatch):
@@ -119,7 +139,7 @@ DESIGN — a minimalist automatic dress watch: 38mm brushed steel case, slim bez
 
 STRICTLY NO branding: no brand names, logos, swooshes, wordmarks, text, trademarks, or brand-resembling motifs anywhere on the dial, case, crown, or strap. Fully original and unbranded.
 
-STYLE: photorealistic product render, ultra sharp detail, accurate materials (brushed steel, sunburst lacquer, leather), true-to-life color, soft cinematic studio lighting, flat light-gray seamless background, product design presentation board.
+LOOK: photorealistic product render, accurate materials (brushed steel, sunburst lacquer, leather), true-to-life color, soft cinematic studio lighting, flat light-gray seamless background, product design presentation board. Aspect ratio 16:9.
 ```
 
 ## Case 3 — Simple single-view studio shot (for simple props)
@@ -127,19 +147,19 @@ STYLE: photorealistic product render, ultra sharp detail, accurate materials (br
 For a prop that doesn't need a full turnaround (a mug, a book, a key):
 
 ```
-A [product/prop] — [detailed physical description: shape, material, color, finish, distinctive features]. Studio product shot, soft directional light, neutral background, sharp focus.
+A [product/prop] — [detailed physical description: shape, material, color, finish, distinctive features]. Studio product shot, soft directional light, neutral background, centered, sharp focus. Aspect ratio 1:1.
 ```
 
 Example — **drama** (`@prop_mug`):
 
 ```
-A ceramic mug with a reddish-orange pinstripe around the rim. Clean studio light, neutral background, centered, product photography.
+A ceramic mug with a reddish-orange pinstripe around the rim. Clean studio light, neutral background, centered, product photography. Aspect ratio 1:1.
 ```
 
 Example — **drama** (`@prop_album`):
 
 ```
-A worn leather-bound photo album, closed, brass corner brackets, a faint water ring on the cover, slightly bowed spine. Studio product shot, soft directional light, neutral background, sharp focus.
+A worn leather-bound photo album, closed, brass corner brackets, a faint water ring on the cover, slightly bowed spine. Studio product shot, soft directional light, neutral background, sharp focus. Aspect ratio 1:1.
 ```
 
 ## Rules
