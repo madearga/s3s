@@ -1,0 +1,43 @@
+---
+name: s3s
+version: 1.0.0
+description: Seedance 2.0 / Higgsfield shotlist workflow — asset references, creative interview, and editable HTML shotlist with @tag binding.
+author: madearga
+repository: https://github.com/madearga/s3s
+license: MIT
+skills:
+  - s3s
+  - seedance-make-character
+  - seedance-make-location
+  - seedance-make-prop
+  - seedance-shotlist-interview
+  - seedance-shotlist-director
+commands:
+  - /s3s
+  - /s3s-references
+  - /s3s-interview
+  - /s3s-shotlist
+tags:
+  - seedance-20
+  - higgsfield
+  - shotlist
+  - video-generation
+  - ai-workflow
+---
+
+# s3s — Seedance Shotlist Suite
+
+Agent-native workflow package for building Seedance 2.0 / Higgsfield videos.
+
+## Usage
+
+- `/s3s` — start the full workflow (assets → interview → shotlist)
+- `/s3s-references` — build reference sheets only
+- `/s3s-interview` — creative intake and brief
+- `/s3s-shotlist` — generate the HTML shotlist from an existing brief
+
+## Validate
+
+```bash
+python scripts/validate_skills.py
+```

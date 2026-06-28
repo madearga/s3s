@@ -1,6 +1,20 @@
 ---
 name: seedance-shotlist-director
 description: Generate a director's shotlist as an editable HTML document for Seedance 2.0 video production. Use whenever the user provides a script, scene breakdown, story idea, or treatment and wants it turned into a numbered shotlist with English Seedance 2.0 prompts. Trigger on "make a shotlist", "break this script into prompts", "generate prompts for Seedance", "shotlist for this scene", or any request to convert narrative content into shot-by-shot prompts. Also use when updating, revising, or extending an existing shotlist HTML. Also use as the SECOND stage after `seedance-shotlist-interview` — when a brief, directorial voice, per-scene setup, and @tag element list already exist, build the HTML from them. Each prompt targets 15 seconds; longer scenes split across multiple prompts under the same scene number. Output is a single editable HTML file with checkboxes per scene, a global Style Prefix block, an optional Elements list of @tag image references, and CUT-separated shots inside each prompt.
+license: MIT
+user-invocable: true
+tags:
+  - shotlist
+  - html
+  - seedance-20
+  - director
+  - prompts
+metadata:
+  version: "1.0.0"
+  updated: "2026-06-28"
+  parent: "seedance-shotlist-interview"
+  author: "madearga"
+  repository: "https://github.com/madearga/s3s"
 ---
 
 # Seedance 2.0 Shotlist Director

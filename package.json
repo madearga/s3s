@@ -3,6 +3,9 @@
   "version": "1.3.0",
   "description": "Seedance 2.0 shotlist workflow — reference sheets + creative interview + HTML shotlist director with @tag image reference binding. Dual-compatible: pi + opencode.",
   "keywords": ["pi-package", "opencode", "seedance", "shotlist", "video", "director", "references"],
+  "scripts": {
+    "validate": "python3 scripts/validate_skills.py"
+  },
   "pi": {
     "skills": ["./.agents/skills"],
     "prompts": ["./prompts"]
